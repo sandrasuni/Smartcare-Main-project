@@ -1,0 +1,68 @@
+{% extends 'doctor/layout_doctor.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Attendance List</h2>
+
+        <form method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search by Username or Email" value="{{ request.GET.q }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance %}
+                        <tr>
+                            <td>{{ record.user.username }}</td>
+                            <td>{{ record.user.email }}</td>
+                            <td>{{ record.user.get_role_display }}</td>
+                            <td>{{ record.date }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No attendance records found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if attendance.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ attendance.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ attendance.number }} of {{ attendance.paginator.num_pages }}</span>
+                </li>
+                {% if attendance.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ attendance.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ attendance.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </div>
+{% endblock %}
