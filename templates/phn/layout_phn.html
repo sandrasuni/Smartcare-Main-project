@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{% static 'patients/images/favicon.png' %}" type="">
+
+  <title> SMARTCARE </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+  <link rel="stylesheet" type="text/css" href="{% static 'patients/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'patients/css/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'patients/css/responsive.css' %}">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+<!-- Bootstrap JS (Popper included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+
+<body>
+
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <img src="{% static 'patients/images/hero-bg.png' %}" alt="">
+    </div>
+
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.html">
+            <span>
+              SMARTCARE
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'public_health_nurse_dashboard' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#footer_detail">About</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Token
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
+                  <li><a class="dropdown-item" href="#"></a></li>
+                  <li><a class="dropdown-item" href="{% url 'generate_token' %}">Token Generate</a></li>
+                  <li><a class="dropdown-item" href="{% url 'token_list' %}">Token List</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Vaccination Records
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
+                  <li><a class="dropdown-item" href="{% url 'vaccination_create' %}">Vaccine Add</a></li>
+                  <li><a class="dropdown-item" href="{% url 'vaccination_list' %}">Vaccine Record</a></li>
+                </ul>    
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Visits
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
+                  <li><a class="dropdown-item" href="{% url 'phn_pregenent_add' %}">Maternal Add</a></li>
+                  <li><a class="dropdown-item" href="{% url 'phn_pregenent_list' %}">Maternal Record</a></li>
+                  <li><a class="dropdown-item" href="{% url 'maternal_visit_add' %}">Maternal Visit Add</a></li>
+                  <li><a class="dropdown-item" href="{% url 'maternal_visit_list' %}">Maternal Visit Record</a></li>
+                  <li><a class="dropdown-item" href="{% url 'add_bedridden' %}">Bedridden visit</a></li>
+                  <li><a class="dropdown-item" href="{% url 'list_bedridden' %}">List Bedridden </a></li>
+                  <li><a class="dropdown-item" href="{% url 'schedule_bedridden_visit' %}">Bedridden visit Schedule</a></li>
+                  <li><a class="dropdown-item" href="{% url 'schedule_bedridden_visit_list' %}">Bedridden visit List</a></li>
+                  
+                </ul>    
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Attendance
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
+                  <li><a class="dropdown-item" href="#"></a></li>
+                  <li><a class="dropdown-item" href="{% url 'mark_phn_attendance' %}">Add Attendance</a></li>
+                  <li><a class="dropdown-item" href="{% url 'my_phn_attendance' %}">My Attendance</a></li>
+                  <li><a class="dropdown-item" href="{% url 'phn_list_all_att' %}">Staff Attendance</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{% url 'public_health_nurse_dashboard' %}" id="navbarDropdown" role="button"
+                 data-bs-toggle="dropdown" aria-expanded="false" style="font-weight: bold;">
+                  {{ user.username }} <i class="fas fa-user-circle"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
+                  <li><a class="dropdown-item" href="{% url 'phn_profile' %}">My Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Complaint/Feedback</a></li>
+                  <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+              </li>
+              
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+    <section class="slider_section">
+      <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-7">
+                  <div class="detail-box">
+                    <h1>We Provide Best <br>Healthcare</h1>
+                    <p>
+                      Your health, our priority — seamlessly connecting patients, doctors, and healthcare providers. 
+                      Our system streamlines patient care, doctor consultations, maternal health tracking, 
+                      child growth monitoring, and pharmacist support.
+                      <span id="more-text" style="display: none;">
+                        We are committed to empowering communities by making healthcare more accessible, organized, and effective. 
+                        From scheduling maternal checkups to tracking child development milestones, we ensure every step of your health journey is managed with care.
+                        Together, let’s build a healthier tomorrow.
+                      </span>
+                    </p>
+                    <div class="btn-box">
+                      <a href="#" class="btn1" onclick="document.getElementById('more-text').style.display='inline'; this.style.display='none'; return false;">
+                        Read More
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item ">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-7">
+                  <div class="detail-box">
+                    <h1>
+                      We Provide Best Healthcare
+                    </h1>
+                    <p>
+                      Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
+                    </p>
+                    <div class="btn-box">
+                      <a href="" class="btn1">
+                        Read More
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container ">
+              <div class="row">
+                <div class="col-md-7">
+                  <div class="detail-box">
+                    <h1>
+                      We Provide Best Healthcare
+                    </h1>
+                    <p>
+                      Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
+                    </p>
+                    <div class="btn-box">
+                      <a href="" class="btn1">
+                        Read More
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ol class="carousel-indicators">
+          <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+          <li data-target="#customCarousel1" data-slide-to="1"></li>
+          <li data-target="#customCarousel1" data-slide-to="2"></li>
+        </ol>
+      </div>
+
+    </section>
+    <!-- end slider section -->
+  </div>
+
+
+  <!-- end client section -->
+
+  {% block content %}
+
+  {% endblock %}
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-3 footer_col">
+          <div class="footer_contact">
+            <h4>Reach at..</h4>
+            <div class="contact_link_box">
+              <div>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>India, Kerala, Calicut district</span>
+              </div>
+              <div>
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>Call +91 8590915113</span>
+              </div>
+              <div>
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>smartcare@gmail.com</span>
+              </div>
+            </div>
+          {% comment %} <div class="footer_social">
+            <a href="">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>{% endcomment %}
+          </div> 
+        </div>
+        <div class="col-md-6 col-lg-3 footer_col">
+          <div id="footer_detail" class="footer_detail">
+            <h4>
+              About
+            </h4>
+            <p>
+              Our Healthcare Management System helps streamline patient care, doctor consultations, maternal health tracking, child growth monitoring, and pharmacy management. We aim to make healthcare more accessible and organized for everyone.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-2 mx-auto footer_col">
+          <div class="footer_link_box">
+            {% comment %}<h4>
+              Links
+            </h4>
+             <div class="footer_links">
+              <a class="active" href="index.html">
+                Home
+              </a>
+              <a class="" href="about.html">
+                About
+              </a>
+              <a class="" href="departments.html">
+                Departments
+              </a>
+              <a class="" href="doctors.html">
+                Doctors
+              </a>
+              <a class="" href="contact.html">
+                Contact Us
+              </a>
+            </div> {% endcomment %}
+          </div>
+        </div>
+        {% comment %} <div class="col-md-6 col-lg-3 footer_col ">
+          <h4>
+            Newsletter
+          </h4>
+          <form action="#">
+            <input type="email" placeholder="Enter email" />
+            <button type="submit">
+              Subscribe
+            </button>
+          </form>
+        </div> {% endcomment %}
+      </div>
+      {% comment %} <div class="footer-info">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">Free Html Templates</a>
+        </p>
+      </div> {% endcomment %}
+    </div>
+  </footer>
+  <!-- footer section -->
+
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <!-- owl slider -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+ <script type="text/javascript" src="{% static 'patients/js/jquery-3.4.1.min.js' %}"></script>
+ <script type="text/javascript" src="{% static 'patients/js/custom.js' %}"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>
