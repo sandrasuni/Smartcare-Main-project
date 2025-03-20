@@ -1,0 +1,52 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Add Maternal Visit Schedule</h2>
+
+  <form method="POST" action="">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="maternal_case">Select Patient</label>
+      <select id="maternal_case" name="maternal_case" class="form-control" required>
+        {% for case in maternal_cases %}
+          <option value="{{ case.id }}">{{ case.full_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="visit_date">Visit Date</label>
+      <input type="date" id="visit_date" name="visit_date" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label for="follow_up_date">Follow-up Date</label>
+      <input type="date" id="follow_up_date" name="follow_up_date" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="visit_type">Visit Type</label>
+      <select id="visit_type" name="visit_type" class="form-control" required>
+        {% for type, label in visit_types %}
+          <option value="{{ type }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="visit_status">Visit Status</label>
+      <select id="visit_status" name="visit_status" class="form-control" required>
+        {% for status, label in visit_statuses %}
+          <option value="{{ status }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Visit</button>
+  </form>
+</div>
+{% endblock %}

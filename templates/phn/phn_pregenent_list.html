@@ -1,0 +1,117 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display All Data</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for better spacing */
+        h3 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            margin-bottom: 30px;
+        }
+
+        .btn-add {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Add Button -->
+        <a href="{% url 'phn_pregenent_add' %}" class="btn btn-primary btn-add">Add New</a>
+
+
+        <!-- Pregnant Women -->
+        <h3>Pregnant Women</h3>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>SL NO</th>
+                    <th>Household</th>
+                    <th>Name</th>
+                    <th>Expected Delivery Date</th>
+                    <th>Antenatal Checkups Completed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for woman in pregnant_women %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{ woman.household.head_of_household }}</td>
+                    <td>{{ woman.name }}</td>
+                    <td>{{ woman.expected_delivery_date }}</td>
+                    <td>{{ woman.antenatal_checkups_completed }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<br><br><br>
+
+<div class="container">
+    <h2>Maternal Case List</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>SL NO</th>
+          <th>Household</th>
+          <th>Pregnant</th>
+          <th>Full Name</th>
+          <th>Age</th>
+          <th>Contact</th>
+          <th>Husband's Name</th>
+          <th>Husband's Contact</th>
+          <th>Address</th>
+          <th>LMP</th>
+          <th>Gestational Age (Weeks)</th>
+          <th>EDD</th>
+          <th>Risk Factor</th>
+          <th>Gravida</th>
+          <th>Parity</th>
+          <th>Antenatal Checkups</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for case in maternal_cases %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{ case.household_name }}</td>
+          <td>{{ case.pregnant_member_name }}</td>
+          <td>{{ case.full_name }}</td>
+          <td>{{ case.age }}</td>
+          <td>{{ case.contact_number }}</td>
+          <td>{{ case.husband_name }}</td>
+          <td>{{ case.husband_contact_number }}</td>
+          <td>{{ case.address }}</td>
+          <td>{{ case.last_menstrual_period }}</td>
+          <td>{{ case.gestational_age_weeks }}</td>
+          <td>{{ case.expected_delivery_date }}</td>
+          <td>{{ case.pregnancy_risk_factor }}</td>
+          <td>{{ case.number_of_pregnancies }}</td>
+          <td>{{ case.number_of_live_births }}</td>
+          <td>{% if case.antenatal_checkups %} Yes {% else %} No {% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="15" class="text-center">No maternal cases found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+    {% endblock %}

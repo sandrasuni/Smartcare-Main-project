@@ -1,0 +1,36 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Maternal Visit Schedules</h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+        <th>Visit Date</th>
+        <th>Follow-up Date</th>
+        <th>Visit Type</th>
+        <th>Visit Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for schedule in visit_schedules %}
+        <tr>
+          <td>{{ schedule.maternal_case.full_name }}</td>
+          <td>{{ schedule.visit_date|default:"N/A" }}</td>
+          <td>{{ schedule.follow_up_date|default:"N/A" }}</td>
+          <td>{{ schedule.get_visit_type_display }}</td>
+          <td>{{ schedule.get_visit_status_display }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No visit schedules found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

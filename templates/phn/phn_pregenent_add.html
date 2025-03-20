@@ -1,0 +1,89 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h2>Register Maternal Case</h2>
+  <form method="POST" action="{% url 'phn_pregenent_add' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="household">Household Name</label>
+      <input type="text" id="household" name="household" class="form-control" placeholder="Enter household name">
+    </div>
+
+    <div class="form-group">
+      <label for="pregnant_member">Pregnant Member Name</label>
+      <input type="text" id="pregnant_member" name="pregnant_member" class="form-control" placeholder="Enter pregnant member name">
+    </div>
+
+    <div class="form-group">
+      <label for="full_name">Full Name</label>
+      <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Enter full name">
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" min="0">
+    </div>
+
+    <div class="form-group">
+      <label for="contact_number">Contact Number</label>
+      <input type="text" id="contact_number" name="contact_number" class="form-control" placeholder="Enter contact number">
+    </div>
+
+    <div class="form-group">
+      <label for="husband_name">Husband's Name</label>
+      <input type="text" id="husband_name" name="husband_name" class="form-control" placeholder="Enter husband's name">
+    </div>
+
+    <div class="form-group">
+      <label for="husband_contact_number">Husband's Contact Number (Optional)</label>
+      <input type="text" id="husband_contact_number" name="husband_contact_number" class="form-control" placeholder="Enter husband's contact number">
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" name="address" class="form-control" placeholder="Enter address"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="last_menstrual_period">Last Menstrual Period (LMP)</label>
+      <input type="date" id="last_menstrual_period" name="last_menstrual_period" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="gestational_age">Gestational Age (Weeks)</label>
+      <input type="number" id="gestational_age" name="gestational_age" class="form-control" placeholder="Enter gestational age" min="0">
+    </div>
+
+    <div class="form-group">
+      <label for="pregnancy_risk_factor">Pregnancy Risk Factor</label>
+      <select id="pregnancy_risk_factor" name="pregnancy_risk_factor" class="form-control">
+        <option value="High">High</option>
+        <option value="Moderate">Moderate</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="number_of_pregnancies">Number of Pregnancies (Gravida)</label>
+      <input type="number" id="number_of_pregnancies" name="number_of_pregnancies" class="form-control" min="0" placeholder="Enter number of pregnancies">
+    </div>
+
+    <div class="form-group">
+      <label for="number_of_live_births">Number of Live Births (Parity)</label>
+      <input type="number" id="number_of_live_births" name="number_of_live_births" min="0" class="form-control" placeholder="Enter number of live births">
+    </div>
+
+    <div class="form-group">
+      <label>Antenatal Checkups Completed</label>
+      <input type="hidden" name="antenatal_checkups" value="false">
+      <input type="checkbox" id="antenatal_checkups" name="antenatal_checkups" value="true"> Yes
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}
