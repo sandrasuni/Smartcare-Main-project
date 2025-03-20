@@ -1,0 +1,43 @@
+{% extends 'jhi/layout_jhi.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Vaccination Records</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-success">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Age</th>
+                    <th>Contact Number</th>
+                    <th>Vaccine Name</th>
+                    <th>Vaccination Date</th>
+                    <th>Route</th>
+                    <th>Location</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.patient_name }}</td>
+                    <td>{{ record.age }}</td>
+                    <td>{{ record.contact_number }}</td>
+                    <td>{{ record.vaccine_name }}</td>
+                    <td>{{ record.vaccination_date }}</td>
+                    <td>{{ record.route_of_administration }}</td>
+                    <td>{{ record.location }}</td>
+                    <td>{{ record.address }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

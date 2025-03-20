@@ -1,0 +1,64 @@
+{% extends 'jhi/layout_jhi.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Register Vaccination Record</h2>
+
+    <form method="POST" class="bg-light p-4 rounded shadow-sm">
+        {% csrf_token %}
+        
+        <div class="row mb-3">
+            <label for="patient_name" class="form-label">Patient Name</label>
+            <input type="text" id="patient_name" name="patient_name" class="form-control" required>
+        </div>
+
+        <div class="row mb-3">
+            <label for="age" class="form-label">Age</label>
+            <input type="number" id="age" name="age" class="form-control" required>
+        </div>
+
+        <div class="row mb-3">
+            <label for="contact_number" class="form-label">Contact Number</label>
+            <input type="text" id="contact_number" name="contact_number" class="form-control" required>
+        </div>
+
+        <div class="row mb-3">
+            <label for="location" class="form-label">Location</label>
+            <textarea id="location" name="location" class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="row mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" name="address" class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="row mb-3">
+            <label for="vaccine_name" class="form-label">Vaccine Name</label>
+            <select id="vaccine_name" name="vaccine_name" class="form-select" required>
+                {% for value, label in vaccine_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="row mb-3">
+            <label for="vaccination_date" class="form-label">Vaccination Date</label>
+            <input type="date" id="vaccination_date" name="vaccination_date" class="form-control" required>
+        </div>
+
+        <div class="row mb-4">
+            <label for="route_of_administration" class="form-label">Route of Administration</label>
+            <select id="route_of_administration" name="route_of_administration" class="form-select" required>
+                {% for value, label in route_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success px-5">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
