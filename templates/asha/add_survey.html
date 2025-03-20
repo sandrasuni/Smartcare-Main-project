@@ -1,0 +1,260 @@
+{% extends 'asha/layout_asha.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Survey</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Health Survey Form</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Dropdown for Household Selection -->
+                    <div class="mb-3">
+                        <label for="household" class="form-label">Select Household:</label>
+                        <select name="household" class="form-select" required>
+                            <option value="">--Select Household--</option>
+                            {% for household in households %}
+                                <option value="{{ household.id }}">{{ household.head_of_household }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Fever Cases -->
+                    <h4 class="text-primary">Fever Cases</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Fever ≥ 7 days</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Male ≤5 Yr:</label>
+                                <input type="number" name="fever_7_days_or_more_male_5_or_less" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Male >5 Yr:</label>
+                                <input type="number" name="fever_7_days_or_more_male_above_5" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Female ≤5 Yr:</label>
+                                <input type="number" name="fever_7_days_or_more_female_5_or_less" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Female >5 Yr:</label>
+                                <input type="number" name="fever_7_days_or_more_female_above_5" class="form-control" value="0">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5>Fever < 7 days</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Male ≤5 Yr:</label>
+                                <input type="number" name="fever_less_than_7_days_male_5_or_less" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Male >5 Yr:</label>
+                                <input type="number" name="fever_less_than_7_days_male_above_5" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Female ≤5 Yr:</label>
+                                <input type="number" name="fever_less_than_7_days_female_5_or_less" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Female >5 Yr:</label>
+                                <input type="number" name="fever_less_than_7_days_female_above_5" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fever with Symptoms -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Fever with Rash:</label>
+                                <input type="number" name="fever_with_rash" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Fever with Bleeding:</label>
+                                <input type="number" name="fever_with_bleeding" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Fever with Altered Sensorium:</label>
+                                <input type="number" name="fever_with_altered_sensorium" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cough Cases -->
+                    <h4 class="text-primary">Cough Cases</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Cough ≤2 Weeks with Fever:</label>
+                                <input type="number" name="cough_2_weeks_or_less_with_fever" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cough ≤2 Weeks without Fever:</label>
+                                <input type="number" name="cough_2_weeks_or_less_without_fever" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Cough >2 Weeks with Fever:</label>
+                                <input type="number" name="cough_more_than_2_weeks_with_fever" class="form-control" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cough >2 Weeks without Fever:</label>
+                                <input type="number" name="cough_more_than_2_weeks_without_fever" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diarrhea Cases -->
+                    <h4 class="text-primary">Diarrhea Cases</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Loose Watery Stools with Blood (<2 Weeks):</label>
+                                <input type="number" name="loose_watery_stools_with_blood_less_than_2_weeks" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Loose Watery Stools without Blood (<2 Weeks):</label>
+                                <input type="number" name="loose_watery_stools_without_blood_less_than_2_weeks" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Diseases -->
+                    <h4 class="text-primary">Other Diseases</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Jaundice (<4 Weeks):</label>
+                                <input type="number" name="jaundice_less_than_4_weeks" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Acute Flaccid Paralysis:</label>
+                                <input type="number" name="acute_flaccid_paralysis" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Malaria Cases -->
+                    <h4 class="text-primary">Malaria Cases</h4>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Malaria Vivax (RDT):</label>
+                                <input type="number" name="malaria_vivax_rdt" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Malaria Falciparum (RDT):</label>
+                                <input type="number" name="malaria_falciparum_rdt" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Malaria Mixed (RDT):</label>
+                                <input type="number" name="malaria_mixed_rdt" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Animal Bites -->
+                    <h4 class="text-primary">Animal Bites</h4>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Snake Bite:</label>
+                                <input type="number" name="animal_bite_snake" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Dog Bite:</label>
+                                <input type="number" name="animal_bite_dog" class="form-control" value="0">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Other Animal Bite:</label>
+                                <input type="number" name="animal_bite_other" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leptospirosis -->
+                    <h4 class="text-primary">Leptospirosis</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Leptospirosis (RDT):</label>
+                                <input type="number" name="leptospirosis_rdt" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Section -->
+                    <h4 class="text-danger">Summary</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Total Cases:</label>
+                                <input type="number" name="total_cases" class="form-control" value="0" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Total Deaths:</label>
+                                <input type="number" name="total_deaths" class="form-control" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

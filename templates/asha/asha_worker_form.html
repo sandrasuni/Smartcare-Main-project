@@ -1,0 +1,553 @@
+{% extends 'asha/layout_asha.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Custom Styles for the Enquiry Form -->
+<style>
+  /* Main container styling */
+  .custom-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #f8f9fa; /* Light grey background */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  /* Updated Heading Styles */
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 10px;
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00796B;
+    margin: 25px 0 15px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group small {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .form-group .row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .horizontal-options,
+  .horizontal-checkboxes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+  }
+  .horizontal-options small,
+  .horizontal-checkboxes small {
+    margin-right: 10px;
+  }
+  .horizontal-checkboxes .form-group {
+    display: flex;
+    align-items: center;
+  }
+  .horizontal-checkboxes .form-group label {
+    margin-left: 5px;
+    margin-bottom: 0;
+  }
+  /* New radio group styling for Vaccination Done */
+  .radio-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px; /* Adjust the gap as needed */
+    width: 100%;
+  }
+  .radio-group span {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+  .radio-group label {
+    white-space: nowrap;
+  }
+  /* Reduced gap for Following Medication alignment */
+  .following-medication {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  /* New styling for antenatal checkups */
+  .antenatal-checkups {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .add-more-btn {
+    margin-bottom: 20px;
+  }
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+    display: block;
+  }
+</style>
+
+<div class="custom-container">
+  <h2>Asha Worker Enquiry Form</h2>
+  <form method="POST" action="{% url 'save_household' %}">
+    {% csrf_token %}
+    <!-- Household Information -->
+    <h3>Household Information</h3>
+    <div class="form-group">
+      <small>Enter the House name</small>
+      <input type="text" name="head_of_household" placeholder="House Name">
+    </div>
+    <div class="form-group">
+      <small>Enter the contact number of the household</small>
+      <input type="text" name="contact_number" placeholder="Contact Number">
+    </div>
+    <div class="form-group">
+      <small>Enter the address </small>
+      <textarea name="address" placeholder="Address"></textarea>
+    </div>
+    
+    <!-- Family Members -->
+    <h3>Family Members</h3>
+    <div id="family-members">
+      <div class="form-group row">
+        <div>
+          <small>Name of the family member</small>
+          <input type="text" name="member_name[]" placeholder="Name">
+        </div>&nbsp&nbsp
+        <div>
+          <small>Age of the family member</small>
+          <input type="number" name="member_age[]" placeholder="Age">
+        </div>&nbsp&nbsp
+        <div>
+          <small>Gender of the family member</small>
+          <input type="text" name="member_gender[]" placeholder="Gender">
+        </div>&nbsp&nbsp
+        <div>
+          <small>Occupation of the family member</small>
+          <input type="text" name="member_occupation[]" placeholder="Occupation">
+        </div>&nbsp&nbsp
+      </div>
+    </div>
+    <button type="button" class="add-more-btn" onclick="addMember()">Add More Members</button>
+    
+    <!-- Chronic Illness -->
+    <h3>Chronic Illness</h3>
+    <div id="chronic-illness-container">
+      <div class="chronic-illness-entry">
+        <div class="form-group">
+          <small>Family Member</small>
+          <input type="text" name="chronic_family_member[]" placeholder="Family Member Name" onblur="checkFamilyMember(this)" oninput="checkFamilyMember(this)">
+        </div>
+        <div class="form-group">
+          <small>Illness</small>
+          <input type="text" name="chronic_illness[]" placeholder="Illness">
+        </div>
+        <div class="form-group">
+          <small>Medications Prescribed</small>
+          <textarea name="medications_prescribed[]" placeholder="Medications"></textarea>
+        </div>
+        <div class="form-group following-medication">
+          <small>Following Medication</small>
+          <input type="checkbox" name="following_medication[]" value="true">
+        </div>
+      </div>
+    </div>
+    <button type="button" class="add-more-btn" onclick="addChronicIllness()">Add More Chronic Illness Records</button>
+    
+    <!-- Follow-Up Patients -->
+    <h3>Follow-Up Patients</h3>
+    <div id="followup-container">
+      <div class="followup-entry">
+        <div class="form-group">
+          <small>Family Member</small>
+          <input type="text" name="followup_family_member[]" placeholder="Family Member Name" onblur="checkFamilyMember(this)" oninput="checkFamilyMember(this)">
+        </div>
+        <div class="form-group">
+          <small>Diagnosis</small>
+          <input type="text" name="followup_diagnosis[]" placeholder="Diagnosis">
+        </div>
+        <div class="form-group">
+          <small>Last Checkup Date</small>
+          <input type="date" name="last_checkup_date[]">
+        </div>
+        <div class="form-group">
+          <small>Next Follow-Up Date</small>
+          <input type="date" name="next_followup_date[]">
+        </div>
+      </div>
+    </div>
+    <button type="button" class="add-more-btn" onclick="addFollowup()">Add More Follow-Up Patients</button>
+    
+    <!-- Sanitation & Hygiene (Horizontal Checkboxes) -->
+    <h3>Sanitation & Hygiene</h3>
+    <div class="horizontal-checkboxes">
+      <div class="form-group">
+        <input type="checkbox" id="has_toilet" name="has_toilet" value="true">
+        <label for="has_toilet">Has Toilet</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="has_clean_drinking_water" name="has_clean_drinking_water" value="true">
+        <label for="has_clean_drinking_water">Has Clean Drinking Water</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="has_handwashing_facility" name="has_handwashing_facility" value="true">
+        <label for="has_handwashing_facility">Has Handwashing Facility</label>
+      </div>
+    </div>
+    
+    <!-- Children (0-5 years) -->
+    <h3>Children (0-5 years)</h3>
+    <div id="children-health">
+      <div class="form-group" data-child-index="0">
+        <div class="row">
+          <div>
+            <small>Child's Name</small>
+            <input type="text" name="child_name[]" placeholder="Child's Name">
+          </div>
+          <div>
+            <small>Child's Age</small>
+            <input type="number" name="child_age[]" placeholder="Age">
+          </div>
+          <div>
+            <small>Birth Weight KG</small>
+            <input type="number" name="child_weight[]" placeholder="Birth Weight">
+          </div>
+          <div>
+            <small>Immunization Status</small>
+            <input type="text" name="immunization_status[]" placeholder="Immunization Status">
+          </div>
+          <div>
+            <small>Nutritional Status</small>
+            <select name="nutritional_status[]">
+              <option value="Normal">Normal</option>
+              <option value="Underweight">Underweight</option>
+            </select>
+          </div>
+        </div>
+        <!-- Horizontal Radio Buttons for Vaccination Done -->
+        <div class="horizontal-options">
+          <span class="option-label">Vaccination Done:</span>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="vaccination_done_0" value="yes" onchange="toggleDueDate(this)">
+              Yes
+            </label>&nbsp&nbsp&nbsp&nbsp
+            <label>
+              <input type="radio" name="vaccination_done_0" value="no" onchange="toggleDueDate(this)">
+              No
+            </label>
+          </div>
+        </div>
+        <div class="due-date">
+          <small>Due Date for Vaccination</small>
+          <input type="date" name="vaccination_due_date[]">
+        </div>
+      </div>
+    </div>
+    <button type="button" class="add-more-btn" onclick="addChild()">Add More Children</button>
+    
+    <!-- Visit Details -->
+    <h3>Visit Details</h3>
+    <div id="visit-details">
+      <div class="form-group">
+        <small>Date and Time</small>
+        <input type="datetime-local" name="visit_date[]">
+      </div>
+      <div class="form-group">
+        <small>Reason for Visit</small>
+        <textarea name="visit_reason[]" placeholder="Reason for Visit"></textarea>
+      </div>
+      <div class="form-group">
+        <small>Symptoms Reported</small>
+        <textarea name="visit_symptoms[]" placeholder="Symptoms Reported"></textarea>
+      </div>
+    </div>
+    
+    <!-- Pregnant Women -->
+    <h3>Pregnant Woman</h3>
+    <div id="pregnant-woman">
+      <div class="form-group">
+        <small>Name</small>
+        <input type="text" name="pregnant_member[]" placeholder="Family Member Name">
+      </div>
+      <div class="form-group">
+        <small>Expected Delivery Date</small>
+        <input type="date" name="expected_delivery_date[]">
+      </div>
+      <div class="form-group antenatal-checkups">
+        <small>Antenatal Checkups Completed</small>
+        <input type="hidden" name="antenatal_checkups[]" value="false">
+        <input type="checkbox" name="antenatal_checkups[]" value="true">
+      </div>
+    </div>
+    <button type="button" class="add-more-btn" onclick="addPregnantWoman()">Add More Pregnant Women</button>
+    
+    <!-- Emergency Referral (Horizontal Checkboxes) -->
+    <h3>Emergency Referral</h3>
+    <div class="horizontal-checkboxes" id="emergency-referral">
+      <div class="form-group">
+        <input type="checkbox" id="emergency_issue" name="emergency_issue" value="true">
+        <label for="emergency_issue">Critical Health Issue</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="referred_to_center" name="referred_to_center" value="true">
+        <label for="referred_to_center">Referred to Health Center</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <small>Referral Details</small>
+      <textarea name="referral_details" placeholder="Referral Details"></textarea>
+    </div>
+    
+    <!-- Health Education (Horizontal Checkboxes) -->
+    <h3>Health Education</h3>
+    <div class="horizontal-checkboxes" id="health-education">
+      <div class="form-group">
+        <input type="checkbox" id="nutrition" name="nutrition" value="true">
+        <label for="nutrition">Nutrition</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="breastfeeding" name="breastfeeding" value="true">
+        <label for="breastfeeding">Breastfeeding</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="family_planning" name="family_planning" value="true">
+        <label for="family_planning">Family Planning</label>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="sanitation_hygiene" name="sanitation_hygiene" value="true">
+        <label for="sanitation_hygiene">Sanitation & Hygiene</label>
+      </div>
+    </div>
+    
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<!-- JavaScript Section -->
+<script>
+  // Function to add a new Family Member row
+  function addMember() {
+    let div = document.createElement("div");
+    div.className = "form-group row";
+    div.innerHTML = `
+      <div>
+        <small>Name of the family member</small>
+        <input type="text" name="member_name[]" placeholder="Name">
+      </div>
+      <div>
+        <small>Age of the family member</small>
+        <input type="number" name="member_age[]" placeholder="Age">
+      </div>
+      <div>
+        <small>Gender of the family member</small>
+        <input type="text" name="member_gender[]" placeholder="Gender">
+      </div>
+      <div>
+        <small>Occupation of the family member</small>
+        <input type="text" name="member_occupation[]" placeholder="Occupation">
+      </div>
+    `;
+    document.getElementById("family-members").appendChild(div);
+  }
+
+  // Function to add a new Chronic Illness record
+  function addChronicIllness() {
+    var container = document.getElementById("chronic-illness-container");
+    var entry = document.querySelector(".chronic-illness-entry");
+    var newEntry = entry.cloneNode(true);
+    newEntry.querySelectorAll("input, textarea").forEach(function (input) {
+      if (input.type === "checkbox") {
+        input.checked = false;
+      } else {
+        input.value = "";
+      }
+    });
+    // Remove any previous error messages in the cloned entry
+    var errorMessages = newEntry.querySelectorAll(".error-message");
+    errorMessages.forEach(function(msg) { msg.remove(); });
+    container.appendChild(newEntry);
+  }
+
+  // Function to add a new Follow-Up record
+  function addFollowup() {
+    var container = document.getElementById("followup-container");
+    var entry = document.querySelector(".followup-entry");
+    var newEntry = entry.cloneNode(true);
+    newEntry.querySelectorAll("input").forEach(function (input) {
+      input.value = "";
+    });
+    // Remove any previous error messages in the cloned entry
+    var errorMessages = newEntry.querySelectorAll(".error-message");
+    errorMessages.forEach(function(msg) { msg.remove(); });
+    container.appendChild(newEntry);
+  }
+
+  // Function to check if the entered family member name exists in the Family Members section.
+  function checkFamilyMember(inputField) {
+    var inputName = inputField.value.trim().toLowerCase();
+    if (inputName === "") {
+      removeError(inputField);
+      return;
+    }
+    var familyMemberInputs = document.getElementsByName("member_name[]");
+    var found = false;
+    for (var i = 0; i < familyMemberInputs.length; i++) {
+      if (familyMemberInputs[i].value.trim().toLowerCase() === inputName) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      showError(inputField, "This family member does not exist. Please type the exact name.");
+    } else {
+      removeError(inputField);
+    }
+  }
+
+  // Helper functions to show and remove error messages
+  function showError(inputField, message) {
+    var errorSpan = inputField.parentNode.querySelector(".error-message");
+    if (!errorSpan) {
+      errorSpan = document.createElement("span");
+      errorSpan.className = "error-message";
+      inputField.parentNode.appendChild(errorSpan);
+    }
+    errorSpan.textContent = message;
+    inputField.style.borderColor = "red";
+  }
+
+  function removeError(inputField) {
+    var errorSpan = inputField.parentNode.querySelector(".error-message");
+    if (errorSpan) {
+      errorSpan.remove();
+    }
+    inputField.style.borderColor = "";
+  }
+</script>
+
+<script>
+  let childIndex = 1;  // Track the number of children added
+  function addChild() {
+    let div = document.createElement('div');
+    div.className = 'form-group';
+    div.setAttribute("data-child-index", childIndex);
+    div.innerHTML = `
+      <div>
+        <small>Child's Name</small>
+        <input type="text" name="child_name[]" placeholder="Child's Name">
+      </div>
+      <div>
+        <small>Child's Age</small>
+        <input type="number" name="child_age[]" placeholder="Age">
+      </div>
+      <div>
+        <small>Birth Weight</small>
+        <input type="number" name="child_weight[]" placeholder="Birth Weight">
+      </div>
+      <div>
+        <small>Immunization Status</small>
+        <input type="text" name="immunization_status[]" placeholder="Immunization Status">
+      </div>
+      <div>
+        <small>Nutritional Status</small>
+        <select name="nutritional_status[]">
+          <option value="Normal">Normal</option>
+          <option value="Underweight">Underweight</option>
+        </select>
+      </div>
+      <div class="horizontal-options">
+        <span class="option-label">Vaccination Done:</span>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="vaccination_done_${childIndex}" value="yes" onchange="toggleDueDate(this)">
+            Yes
+          </label>
+          <label>
+            <input type="radio" name="vaccination_done_${childIndex}" value="no" onchange="toggleDueDate(this)">
+            No
+          </label>
+        </div>
+      </div>
+      <div class="due-date">
+        <small>Due Date for Vaccination</small>
+        <input type="date" name="vaccination_due_date[]">
+      </div>
+    `;
+    document.getElementById("children-health").appendChild(div);
+    childIndex++;
+  }
+
+  function toggleDueDate(radio) {
+    let formGroup = radio.closest('.form-group'); 
+    let dueDateDiv = formGroup.querySelector('.due-date');
+    if (radio.value === "no") {
+      dueDateDiv.style.display = "block";
+    } else {
+      dueDateDiv.style.display = "none";
+    }
+  }
+</script>
+
+<script>
+  function addPregnantWoman() {
+    let div = document.createElement("div");
+    div.className = "form-group";
+    div.innerHTML = `
+      <div class="form-group">
+        <small>Member Name</small>
+        <input type="text" name="pregnant_member[]" placeholder="Family Member Name">
+      </div>
+      <div class="form-group">
+        <small>Expected Delivery Date</small>
+        <input type="date" name="expected_delivery_date[]">
+      </div>
+      <div class="form-group antenatal-checkups">
+        <small>Antenatal Checkups Completed</small>
+        <input type="hidden" name="antenatal_checkups[]" value="false">
+        <input type="checkbox" name="antenatal_checkups[]" value="true">
+      </div>
+    `;
+    document.getElementById("pregnant-woman").appendChild(div);
+  }
+</script>
+{% endblock %}

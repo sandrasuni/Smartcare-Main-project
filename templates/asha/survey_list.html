@@ -1,0 +1,118 @@
+{% extends 'asha/layout_asha.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Health Survey List</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Household</th>
+                        <!-- Fever Cases -->
+                        <th>Fever ≥7 Days (Male ≤5)</th>
+                        <th>Fever ≥7 Days (Male >5)</th>
+                        <th>Fever ≥7 Days (Female ≤5)</th>
+                        <th>Fever ≥7 Days (Female >5)</th>
+                        <th>Fever <7 Days (Male ≤5)</th>
+                        <th>Fever <7 Days (Male >5)</th>
+                        <th>Fever <7 Days (Female ≤5)</th>
+                        <th>Fever <7 Days (Female >5)</th>
+                        <th>Fever with Rash</th>
+                        <th>Fever with Bleeding</th>
+                        <th>Fever with Altered Sensorium</th>
+                        <!-- Cough Cases -->
+                        <th>Cough ≤2 Weeks with Fever</th>
+                        <th>Cough ≤2 Weeks without Fever</th>
+                        <th>Cough >2 Weeks with Fever</th>
+                        <th>Cough >2 Weeks without Fever</th>
+                        <!-- Diarrhea Cases -->
+                        <th>Diarrhea with Blood (<2 Weeks)</th>
+                        <th>Diarrhea without Blood (<2 Weeks)</th>
+                        <!-- Other Diseases -->
+                        <th>Jaundice (<4 Weeks)</th>
+                        <th>Acute Flaccid Paralysis</th>
+                        <!-- Malaria Cases -->
+                        <th>Malaria Vivax (RDT)</th>
+                        <th>Malaria Falciparum (RDT)</th>
+                        <th>Malaria Mixed (RDT)</th>
+                        <!-- Animal Bites -->
+                        <th>Snake Bite</th>
+                        <th>Dog Bite</th>
+                        <th>Other Animal Bite</th>
+                        <!-- Leptospirosis -->
+                        <th>Leptospirosis (RDT)</th>
+                        <!-- Summary Fields -->
+                        <th>Total Cases</th>
+                        <th>Total Deaths</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for survey in surveys %}
+                    <tr>
+                        <td>{{ survey.household.head_of_household }}</td>
+                        <!-- Fever Cases -->
+                        <td>{{ survey.fever_7_days_or_more_male_5_or_less }}</td>
+                        <td>{{ survey.fever_7_days_or_more_male_above_5 }}</td>
+                        <td>{{ survey.fever_7_days_or_more_female_5_or_less }}</td>
+                        <td>{{ survey.fever_7_days_or_more_female_above_5 }}</td>
+                        <td>{{ survey.fever_less_than_7_days_male_5_or_less }}</td>
+                        <td>{{ survey.fever_less_than_7_days_male_above_5 }}</td>
+                        <td>{{ survey.fever_less_than_7_days_female_5_or_less }}</td>
+                        <td>{{ survey.fever_less_than_7_days_female_above_5 }}</td>
+                        <td>{{ survey.fever_with_rash }}</td>
+                        <td>{{ survey.fever_with_bleeding }}</td>
+                        <td>{{ survey.fever_with_altered_sensorium }}</td>
+                        <!-- Cough Cases -->
+                        <td>{{ survey.cough_2_weeks_or_less_with_fever }}</td>
+                        <td>{{ survey.cough_2_weeks_or_less_without_fever }}</td>
+                        <td>{{ survey.cough_more_than_2_weeks_with_fever }}</td>
+                        <td>{{ survey.cough_more_than_2_weeks_without_fever }}</td>
+                        <!-- Diarrhea Cases -->
+                        <td>{{ survey.loose_watery_stools_with_blood_less_than_2_weeks }}</td>
+                        <td>{{ survey.loose_watery_stools_without_blood_less_than_2_weeks }}</td>
+                        <!-- Other Diseases -->
+                        <td>{{ survey.jaundice_less_than_4_weeks }}</td>
+                        <td>{{ survey.acute_flaccid_paralysis }}</td>
+                        <!-- Malaria Cases -->
+                        <td>{{ survey.malaria_vivax_rdt }}</td>
+                        <td>{{ survey.malaria_falciparum_rdt }}</td>
+                        <td>{{ survey.malaria_mixed_rdt }}</td>
+                        <!-- Animal Bites -->
+                        <td>{{ survey.animal_bite_snake }}</td>
+                        <td>{{ survey.animal_bite_dog }}</td>
+                        <td>{{ survey.animal_bite_other }}</td>
+                        <!-- Leptospirosis -->
+                        <td>{{ survey.leptospirosis_rdt }}</td>
+                        <!-- Summary Fields -->
+                        <td>{{ survey.total_cases }}</td>
+                        <td>{{ survey.total_deaths }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
