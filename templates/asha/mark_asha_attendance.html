@@ -1,0 +1,58 @@
+{% extends 'asha/layout_asha.html' %}
+{% load static %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem; background-color: #f4f4f4; border-radius: 8px; max-width: 500px; margin: auto;margin-bottom: 35px;">
+    <h2 style="color: #333;">Face Recognition</h2>
+    <button id="startCameraBtn" style="padding: 10px 20px; font-size: 1rem; background-color: #57b4a8; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Camera</button>
+    <video id="video" width="300" height="200" autoplay style="border: 1px solid #ccc; border-radius: 5px;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <button id="captureBtn" style="display:none; padding: 10px 20px; font-size: 1rem; background-color: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer;">Capture</button>
+    <p id="message" style="color: #333; font-size: 1.2rem;"></p>
+</div>
+
+<script>
+    const startCameraBtn = document.getElementById("startCameraBtn");
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const captureBtn = document.getElementById("captureBtn");
+    const message = document.getElementById("message");
+
+    startCameraBtn.addEventListener("click", function() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+                captureBtn.style.display = "block";
+            })
+            .catch(function(err) {
+                console.log("Error accessing camera: ", err);
+            });
+    });
+
+    captureBtn.addEventListener("click", function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL("image/png");
+
+        fetch("/recognize_face/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ image: imageData })
+        })
+        .then(response => response.json())
+        .then(data => {
+            message.innerText = data.message;
+            alert(data.message);
+        })
+        .catch(error => {
+            console.log("Error:", error);
+        });
+    });
+</script>
+
+{% endblock %}
