@@ -1,0 +1,105 @@
+{% extends 'phn/layout_phn.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Register Child for Vaccination</h2>
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="row mb-3">
+      <label for="full_name" class="col-sm-2 col-form-label">Child's Full Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name" required>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="date_of_birth" class="col-sm-2 col-form-label">Date of Birth</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="gender" class="col-sm-2 col-form-label">Gender</label>
+      <div class="col-sm-10">
+        <select class="form-select" id="gender" name="gender" required>
+          <option value="">Select Gender</option>
+          {% for value, label in gender_choices %}
+          <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="age_group" class="col-sm-2 col-form-label">Age Group</label>
+      <div class="col-sm-10">
+        <select class="form-select" id="age_group" name="age_group" required onchange="updateVaccines()">
+          <option value="">Select Age Group</option>
+          {% for value, label in age_choices %}
+          <option value="{{ value }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label class="col-sm-2 col-form-label">Select Vaccines</label>
+      <div class="col-sm-10" id="vaccine_options">
+        <!-- Vaccine checkboxes will be inserted here dynamically -->
+      </div>
+    </div>
+
+    <input type="hidden" id="selected_vaccines" name="vaccines">
+
+    <div class="row mb-3">
+      <label for="vaccination_date" class="col-sm-2 col-form-label">Vaccination Date</label>
+      <div class="col-sm-10">
+        <input type="date" class="form-control" id="vaccination_date" name="vaccination_date">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  const vaccinesByAge = {
+    '0-1': ['OPv-0', 'Hep-b', 'Bcg'],
+    '1.5': ['OPv-1', 'Penta-1', 'IPV-1', 'Rota-1', 'PCV-1'],
+    '2.5': ['OPv-2', 'Penta-2', 'Rota-2'],
+    '3.5': ['OPv-3', 'Penta-3', 'IPV-2', 'Rota-3', 'PCV-2'],
+    '9': ['MR-1', 'IPV-3', 'PCV-booster', 'Vita-a1', 'JE-1'],
+    '16-24': ['DPT-booster-1', 'Vita-a2', 'MR-2', 'JE-2', 'OPv-booster'],
+    '5-6': ['DPT-booster-2'],
+    '10': ['TD'],
+    '16': ['TD']
+  };
+
+  function updateVaccines() {
+    const ageGroup = document.getElementById('age_group').value;
+    const vaccineOptions = document.getElementById('vaccine_options');
+    vaccineOptions.innerHTML = '';
+
+    if (vaccinesByAge[ageGroup]) {
+      vaccinesByAge[ageGroup].forEach(vaccine => {
+        vaccineOptions.innerHTML += `
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="vaccine_${vaccine}" value="${vaccine}" onchange="updateSelectedVaccines()">
+            <label class="form-check-label" for="vaccine_${vaccine}">${vaccine}</label>
+          </div>
+        `;
+      });
+    }
+  }
+
+  function updateSelectedVaccines() {
+    const selected = Array.from(document.querySelectorAll('#vaccine_options input[type=checkbox]:checked'))
+                          .map(cb => cb.value)
+                          .join(', ');
+    document.getElementById('selected_vaccines').value = selected;
+  }
+</script>
+{% endblock %}
