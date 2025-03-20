@@ -1,0 +1,67 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="margin-bottom: 5%;">
+    <h1 class="text-center mb-4">Schedule Bedridden Patient Visit</h1>
+
+    <form method="POST" class="card p-4 shadow">
+        {% csrf_token %}
+
+        <!-- Full Name (Patient) -->
+        <div class="mb-3">
+            <label for="patient" class="form-label">Full Name (Patient)</label>
+            <select name="patient" id="patient" class="form-select" required>
+                <option value="" disabled selected>Select Patient</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Scheduled Visit Date -->
+        <div class="mb-3">
+            <label for="scheduled_date" class="form-label">Scheduled Visit Date</label>
+            <input type="date" id="scheduled_date" name="scheduled_date" class="form-control" required>
+        </div>
+
+        <!-- Visit Time -->
+        <div class="mb-3">
+            <label for="visit_time" class="form-label">Visit Time</label>
+            <input type="time" id="visit_time" name="visit_time" class="form-control" required>
+        </div>
+
+        <!-- Assigned Health Worker -->
+        <div class="mb-3">
+            <label for="health_worker" class="form-label">Assigned Health Worker</label>
+            <select name="health_worker" id="health_worker" class="form-select" required>
+                <option value="" disabled selected>Select Health Worker</option>
+                {% for code, label in health_worker_choices %}
+                    <option value="{{ code }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Assigned Asha Worker -->
+        <div class="mb-3">
+            <label for="asha_worker" class="form-label">Assigned ASHA Worker</label>
+            <select name="asha_worker" id="asha_worker" class="form-select" required>
+                <option value="" disabled selected>Select ASHA Worker</option>
+                {% for asha in asha_workers %}
+                    <option value="{{ asha.id }}">{{ asha.fk_user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Follow-up Required -->
+        <div class="form-check mb-3">
+            <input type="checkbox" id="follow_up" name="follow_up" class="form-check-input">
+            <label for="follow_up" class="form-check-label">Follow-up Required</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Schedule Visit</button>
+    </form>
+</div>
+{% endblock %}

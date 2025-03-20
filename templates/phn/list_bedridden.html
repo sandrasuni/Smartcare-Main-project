@@ -1,0 +1,50 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="margin-bottom: 5%;">
+    <h1 class="text-center mb-4">Bedridden Patients List</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sl No</th>
+                    <th>Full Name</th>
+                    <th>Age/Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Contact Number</th>
+                    <th>Address</th>
+                    <th>Primary Diagnosis</th>
+                    <th>Level of Dependency</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ patient.full_name }}</td>
+                    <td>
+                        {% if patient.dob %}
+                            {{ patient.dob }}
+                        {% else %}
+                            Age: {{ patient.age }}
+                        {% endif %}
+                    </td>
+                    <td>{{ patient.gender }}</td>
+                    <td>{{ patient.contact_number }}</td>
+                    <td>{{ patient.address }}</td>
+                    <td>{{ patient.primary_diagnosis }}</td>
+                    <td>{{ patient.level_of_dependency }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No bedridden patients registered yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

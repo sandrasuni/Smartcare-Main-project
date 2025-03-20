@@ -1,0 +1,50 @@
+{% extends 'phn/layout_phn.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="margin-bottom: 5%;">
+    <h1 class="text-center mb-4">Scheduled Bedridden Patient Visits</h1>
+
+    <div class="card shadow p-3">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Patient Name</th>
+                        <th>Scheduled Date</th>
+                        <th>Visit Time</th>
+                        <th>Assigned Health Worker</th>
+                        <th>Assigned ASHA Worker</th>
+                        <th>Follow-up Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for visit in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ visit.patient.full_name }}</td>
+                        <td>{{ visit.scheduled_date }}</td>
+                        <td>{{ visit.visit_time }}</td>
+                        <td>{{ visit.get_assigned_health_worker_display }}</td>
+                        <td>{{ visit.assigned_asha_worker.fk_user.username}}</td>
+                        <td>
+                            {% if visit.follow_up_required %}
+                                ✅
+                            {% else %}
+                                ❌
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No scheduled visits found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
