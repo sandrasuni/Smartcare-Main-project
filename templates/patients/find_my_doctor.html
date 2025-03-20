@@ -1,0 +1,82 @@
+{% extends 'patients/layout_patients.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-5" style="color: #00796B;">Find My Doctor</h2>
+
+    <!-- Health Center List -->
+    <div class="card mb-5 shadow">
+        <div class="card-header text-white" style="background-color: #009688;">
+            <h3 class="mb-0">Select a Health Center</h3>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for health_center in health_centers %}
+                <li class="list-group-item">
+                    <a href="?health_center_id={{ health_center.id }}" class="text-decoration-none">
+                        {{ health_center.fk_user.username }} ({{ health_center.get_h_type_display }})
+                    </a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No health centers found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Doctor Search and Results -->
+    {% if selected_health_center %}
+    <div class="card shadow-lg">
+        <div class="card-header text-white" style="background: linear-gradient(45deg, #009688, #00796B);">
+            <h3 class="mb-0">Doctors Under Selected Health Center</h3>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="" class="mb-4">
+                <input type="hidden" name="health_center_id" value="{{ selected_health_center }}">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search doctor by name" value="{{ query }}">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+            <div class="row">
+                {% for doctor in doctors %}
+                <div class="col-md-4 mb-4">
+                    <div class="card doctor-card h-100 border-0">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: #00796B;">{{ doctor.fk_user.username }}</h5>
+                            <p class="card-text"><strong>Contact:</strong> {{ doctor.contact_number }}</p>
+                            <p class="card-text">
+                                <strong>Status:</strong>
+                                {% if doctor.is_present %}
+                                    <span class="badge bg-success">On Duty</span>
+                                {% else %}
+                                    <span class="badge bg-danger">On Leave</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">No doctors available.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Additional CSS for enhanced card background and hover effect -->
+<style>
+    .doctor-card {
+        background: linear-gradient(135deg, #f7f7f7, #e8e8e8);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .doctor-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}
