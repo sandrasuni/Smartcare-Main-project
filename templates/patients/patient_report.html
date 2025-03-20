@@ -1,0 +1,56 @@
+{% extends 'patients/layout_patients.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+
+<section class="contact_section layout_padding" style="align-items: center;">
+    <div class="container">
+      <div id="report" class="heading_container">
+        <h2>
+          Get In Touch
+        </h2>
+      </div>
+      <div class="row">
+        <div class="col-md-10">
+          <div class="form_container contact-form">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="form-row">
+                <div class="col-lg-6">
+                  <div>
+                    <input type="text" placeholder="Your Report Name" name="title" />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div>
+                    <input type="file" placeholder="file" name="file" />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input type="text" class="message-box" placeholder="description" name="description" />
+              </div>
+              <div class="col-lg-6">
+                <div style="display: flex; align-items: center; font-size: 14px; margin-top: 5px; white-space: nowrap;">
+                    <input type="checkbox" id="is_continuous_medication" name="is_continuous_medication" 
+                           style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;margin-top: 13px;">
+                    <label for="is_continuous_medication" style="margin-bottom: 0; vertical-align: middle;">Is This Continuous Medicine</label>
+                </div>
+            </div>
+            
+              <div class="btn_box">
+                <button>
+                  SEND
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+{% endblock %}
