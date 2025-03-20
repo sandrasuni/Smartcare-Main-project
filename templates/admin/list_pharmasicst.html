@@ -1,0 +1,53 @@
+
+
+{% extends 'admin/admin_layout.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacists</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h3 class="text-center mb-4">List of Pharmacists</h3>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Years of Experience</th>
+                    <th>Pharmacy Registration Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pharmacist in pharmacists %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ pharmacist.fk_user.username }}</td>
+                        <td>{{ pharmacist.years_of_experience }}</td>
+                        <td>{{ pharmacist.pharmacy_registration_number }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No Pharmacists Found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+{% endblock %}
