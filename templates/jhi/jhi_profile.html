@@ -1,0 +1,202 @@
+{% extends 'jhi/layout_jhi.html' %}
+
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center">
+                    <h4>My Profile</h4>
+                </div>
+                <div class="card-body">
+                    {% for jhi in profile_pic %}
+                    <form id="profileForm" method="POST" action="{% url 'update_jhi_profile' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="jhi_id" value="{{ jhi.id }}">
+
+                        <div class="text-center mb-3">
+                            {% if profile_image and profile_image.profile_image %}
+                                <img src="{{ profile_image.profile_image.url }}" alt="Profile Image" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% else %}
+                                <img src="{% static 'images/default-profile.png' %}" alt="Default Profile" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% endif %}
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label><strong>Profile Image:</strong></label>
+                                <input type="file" class="form-control" name="profile_image">
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Name:</strong></label>
+                                <input type="text" class="form-control edit-field" name="username" value="{{ jhi.fk_user.username }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="username">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Email:</strong></label>
+                                <input type="email" class="form-control edit-field" name="email" value="{{ jhi.fk_user.email }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="email">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Gender:</strong></label>
+                                <select class="form-control edit-field" name="gender" disabled>
+                                    <option value="Male" {% if jhi.gender|lower == "male" %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if jhi.gender|lower == "female" %}selected{% endif %}>Female</option>
+                                    <option value="Other" {% if jhi.gender|lower == "other" %}selected{% endif %}>Other</option>
+                                </select>
+                                <button type="button" class="btn btn-link edit-icon" data-target="gender">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Date of Birth:</strong></label>
+                                <input type="date" class="form-control edit-field" name="dob" value="{{ jhi.dob|date:'Y-m-d' }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="dob">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Contact Number:</strong></label>
+                                <input type="text" class="form-control edit-field" name="contact_number" value="{{ jhi.contact_number }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="contact_number">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Inspection License Number:</strong></label>
+                                <input type="text" class="form-control edit-field" name="inspection_license_number" value="{{ jhi.inspection_license_number }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="inspection_license_number">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Qualifications:</strong></label>
+                                <textarea class="form-control edit-field" name="qualifications" disabled>{{ jhi.qualifications }}</textarea>
+                                <button type="button" class="btn btn-link edit-icon" data-target="qualifications">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Experience in Health Inspection:</strong></label>
+                                <textarea class="form-control edit-field" name="experience_in_health_inspection" disabled>{{ jhi.experience_in_health_inspection }}</textarea>
+                                <button type="button" class="btn btn-link edit-icon" data-target="experience_in_health_inspection">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Address:</strong></label>
+                                <textarea class="form-control edit-field" name="address" disabled>{{ jhi.address }}</textarea>
+                                <button type="button" class="btn btn-link edit-icon" data-target="address">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-success" id="saveBtn" disabled>Save Changes</button>
+                        </div>
+                    </form>
+                    {% empty %}
+                    <p class="text-center text-muted">No profile found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<!-- AJAX Script for Live Editing -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editBtns = document.querySelectorAll(".edit-icon");
+        const saveBtn = document.getElementById("saveBtn");
+        const inputs = document.querySelectorAll(".edit-field");
+
+        // Enable specific field when its respective edit icon is clicked
+        editBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                const targetField = this.getAttribute("data-target");
+                const field = document.querySelector(`[name="${targetField}"]`);
+                field.removeAttribute("disabled");  // Enable the specific field
+                saveBtn.removeAttribute("disabled");  // Enable the save button
+            });
+        });
+
+        // Handle form submission via AJAX
+        document.getElementById("profileForms").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch("{% url 'update_jhi_profile' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Profile updated successfully!");
+                    saveBtn.setAttribute("disabled", "true");
+                    inputs.forEach(input => input.setAttribute("disabled", "true"));
+                } else {
+                    alert("Failed to update profile!");
+                }
+            })
+            .catch(error => console.log(error));
+        });
+    });
+</script>
+
+<style>
+    .edit-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .edit-icon i {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .edit-icon:hover i {
+        color: #0056b3;
+    }
+
+    .position-relative {
+        position: relative;
+    }
+</style>
+
+{% endblock %}
