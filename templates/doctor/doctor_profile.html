@@ -1,0 +1,210 @@
+{% extends 'doctor/layout_doctor.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Font Awesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white text-center">
+                    <h4>My Profile</h4>
+                </div>
+                <div class="card-body">
+                    {% for doctor in profile_pic %}
+                    <form id="profileForm" method="POST" action="{% url 'update_doctor_profile' %}" 
+                    enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+
+                        <div class="text-center mb-3">
+                            {% if scan_profile_pic and scan_profile_pic.profile_image %}
+                                <img src="{{ scan_profile_pic.profile_image.url }}" alt="Profile Image" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% else %}
+                                <img src="{% static 'images/default-profile.png' %}" alt="Default Profile" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label><strong>Profile Image:</strong></label>
+                                <input type="file" class="form-control" name="profile_image">
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Name:</strong></label>
+                                <input type="text" class="form-control edit-field" name="username" value="{{ doctor.fk_user.username }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="username">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Email:</strong></label>
+                                <input type="email" class="form-control edit-field" name="email" value="{{ doctor.fk_user.email }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="email">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Gender:</strong></label>
+                                <select class="form-control edit-field" name="gender" disabled>
+                                    <option value="Male" {% if doctor.gender|lower == "male" %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if doctor.gender|lower == "female" %}selected{% endif %}>Female</option>
+                                    <option value="Other" {% if doctor.gender|lower == "other" %}selected{% endif %}>Other</option>
+                                </select>
+                                <button type="button" class="btn btn-link edit-icon" data-target="gender">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Date of Birth: {{doctor.dob}}</strong></label>
+                                <input type="date" class="form-control edit-field" name="dob" value="{{ doctor.dob|date:'Y-m-d' }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="dob">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Contact Number:</strong></label>
+                                <input type="text" class="form-control edit-field" name="contact_number" value="{{ doctor.contact_number }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="contact_number">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Medical Registration No:</strong></label>
+                                <input type="text" class="form-control edit-field" name="medical_registration_number" value="{{ doctor.medical_registration_number }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="medical_registration_number">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Specialization:</strong></label>
+                                <input type="text" class="form-control edit-field" name="specialization" value="{{ doctor.specialization }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="specialization">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Qualifications:</strong></label>
+                                <input type="text" class="form-control edit-field" name="qualifications" value="{{ doctor.qualifications }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="qualifications">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Years of Experience:</strong></label>
+                                <input type="number" class="form-control edit-field" name="years_of_experience" value="{{ doctor.years_of_experience }}" disabled>
+                                <button type="button" class="btn btn-link edit-icon" data-target="years_of_experience">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label><strong>Address:</strong></label>
+                                <textarea class="form-control edit-field" name="address" disabled>{{ doctor.address }}</textarea>
+                                <button type="button" class="btn btn-link edit-icon" data-target="address">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-success" id="saveBtn" disabled>Save Changes</button>
+                        </div>
+                    </form>
+                    {% empty %}
+                    <p class="text-center text-muted">No profile found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div><br><br>
+
+<!-- AJAX Script for Live Editing -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const editBtns = document.querySelectorAll(".edit-icon");
+        const saveBtn = document.getElementById("saveBtn");
+        const inputs = document.querySelectorAll(".edit-field");
+
+        // Enable specific field when its respective edit icon is clicked
+        editBtns.forEach(btn => {
+            btn.addEventListener("click", function () {
+                const targetField = this.getAttribute("data-target");
+                const field = document.querySelector(`[name="${targetField}"]`);
+                field.removeAttribute("disabled");  // Enable the specific field
+                saveBtn.removeAttribute("disabled");  // Enable the save button
+            });
+        });
+
+        // Handle form submission via AJAX
+        document.getElementById("profileForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch("{% url 'update_doctor_profile' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,  // Ensure CSRF token is included
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Profile updated successfully!");
+                    saveBtn.setAttribute("disabled", "true");
+                    inputs.forEach(input => input.setAttribute("disabled", "true"));
+                } else {
+                    alert("Failed to update profile!");
+                }
+            })
+            .catch(error => console.log(error));
+        });
+    });
+</script>
+
+<style>
+    .edit-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .edit-icon i {
+        font-size: 18px;
+        color: #007bff;
+    }
+
+    .edit-icon:hover i {
+        color: #0056b3;
+    }
+
+    .position-relative {
+        position: relative;
+    }
+</style>
+
+{% endblock %}
