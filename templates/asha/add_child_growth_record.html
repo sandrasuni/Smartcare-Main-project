@@ -1,0 +1,147 @@
+{% extends 'asha/layout_asha.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Child Growth Record</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .form-container {
+            max-width: 600px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            margin-top: 30px;
+        }
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h2 class="form-title">Add Child Growth Record</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label">Child Name:</label>
+                <input type="text" class="form-control" name="child_name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date of Birth:</label>
+                <input type="date" class="form-control" name="date_of_birth" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Gender:</label>
+                <select class="form-select" name="gender" required>
+                    {% for value, label in GENDER_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Guardian Name:</label>
+                <input type="text" class="form-control" name="guardian_name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contact Number:</label>
+                <input type="text" class="form-control" name="contact_number" required>
+            </div>
+
+            <h4 class="mt-4">Physical Growth Measurements</h4>
+
+            <div class="mb-3">
+                <label class="form-label">Weight (kg):</label>
+                <input type="number" step="0.1" class="form-control" name="weight" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Height (cm):</label>
+                <input type="number" step="0.1" class="form-control" name="height" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Head Circumference (cm):</label>
+                <input type="number" step="0.1" class="form-control" name="head_circumference" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mid Upper Arm Circumference (cm):</label>
+                <input type="number" step="0.1" class="form-control" name="mid_upper_arm_circumference" required>
+            </div>
+
+            <h4 class="mt-4">Health and Nutrition</h4>
+
+            <div class="mb-3">
+                <label class="form-label">Exclusive Breastfeeding till 6 months:</label>
+                <select class="form-select" name="exclusive_breastfeeding_till_6_months" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Complementary Feeding Started:</label>
+                <select class="form-select" name="complementary_feeding_started" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Vitamin A Supplementation:</label>
+                <select class="form-select" name="vitamin_a_supplementation" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Immunization Status:</label>
+                <select class="form-select" name="immunization_status" required>
+                    {% for value, label in IMMUNIZATION_STATUS_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Record</button>
+        </form>
+
+        <a href="{% url 'child_growth_list' %}" class="back-link">Back to Records</a>
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>
+
+{% endblock %}

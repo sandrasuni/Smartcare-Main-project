@@ -1,0 +1,196 @@
+{% extends 'asha/layout_asha.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Child Growth Record</title>
+    <style>
+
+        .containers {
+            max-width: 800px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="containers">
+        <h1>Update Child Growth Record</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="section-title">Child Information</div>
+
+            <div class="form-group">
+                <label for="child_name">Child Name:</label>
+                <input type="text" id="child_name" name="child_name" value="{{ record.child_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" value="{{ record.date_of_birth|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    {% for value, label in GENDER_CHOICES %}
+                        <option value="{{ value }}" {% if record.gender == value %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="guardian_name">Guardian Name:</label>
+                <input type="text" id="guardian_name" name="guardian_name" value="{{ record.guardian_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number">Contact Number:</label>
+                <input type="text" id="contact_number" name="contact_number" value="{{ record.contact_number }}" required>
+            </div>
+
+            <div class="section-title">Physical Growth Measurements</div>
+
+            <div class="form-group">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" step="0.1" id="weight" name="weight" value="{{ record.weight }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="height">Height (cm):</label>
+                <input type="number" step="0.1" id="height" name="height" value="{{ record.height }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="head_circumference">Head Circumference (cm):</label>
+                <input type="number" step="0.1" id="head_circumference" name="head_circumference" value="{{ record.head_circumference }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="muac">Mid Upper Arm Circumference (MUAC) (cm):</label>
+                <input type="number" step="0.1" id="muac" name="mid_upper_arm_circumference" value="{{ record.mid_upper_arm_circumference }}" required>
+            </div>
+
+            <div class="section-title">Health and Nutrition</div>
+
+            <div class="form-group">
+                <label for="exclusive_breastfeeding_till_6_months">Exclusive Breastfeeding till 6 months:</label>
+                <select id="exclusive_breastfeeding_till_6_months" name="exclusive_breastfeeding_till_6_months" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}" {% if record.exclusive_breastfeeding_till_6_months == value %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="complementary_feeding_started">Complementary Feeding Started:</label>
+                <select id="complementary_feeding_started" name="complementary_feeding_started" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}" {% if record.complementary_feeding_started == value %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="vitamin_a_supplementation">Vitamin A Supplementation:</label>
+                <select id="vitamin_a_supplementation" name="vitamin_a_supplementation" required>
+                    {% for value, label in YES_NO_CHOICES %}
+                        <option value="{{ value }}" {% if record.vitamin_a_supplementation == value %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="immunization_status">Immunization Status:</label>
+                <select id="immunization_status" name="immunization_status" required>
+                    {% for value, label in IMMUNIZATION_STATUS_CHOICES %}
+                        <option value="{{ value }}" {% if record.immunization_status == value %} selected {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="button-container">
+                <button type="submit">Update Record</button>
+            </div>
+        </form>
+
+        <div class="button-container">
+            <a class="back-link" href="{% url 'child_growth_list' %}">Back to Records</a>
+        </div>
+    </div>
+
+</body>
+</html>
+
+{% endblock %}

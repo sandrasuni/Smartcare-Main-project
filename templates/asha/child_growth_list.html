@@ -1,0 +1,110 @@
+{% extends 'asha/layout_asha.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Growth Records</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .add-record-btn {
+            margin-bottom: 20px;
+        }
+        table {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th {
+            background-color: #0d6efd;
+            color: white;
+        }
+        td, th {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .no-records {
+            text-align: center;
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="page-title">Child Growth Records</h1>
+
+    <div class="text-end">
+        <a href="{% url 'add_child_growth_record' %}" class="btn btn-primary add-record-btn">Add New Record</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Child Name</th>
+                    <th>Date of Birth</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Guardian Name</th>
+                    <th>Contact Number</th>
+                    <th>Weight (kg)</th>
+                    <th>Height (cm)</th>
+                    <th>Head Circumference (cm)</th>
+                    <th>MUAC (cm)</th>
+                    <th>Exclusive Breastfeeding</th>
+                    <th>Complementary Feeding</th>
+                    <th>Vitamin A Supplementation</th>
+                    <th>Immunization Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.child_name }}</td>
+                    <td>{{ record.date_of_birth }}</td>
+                    <td>{{ record.calculate_age }}</td>
+                    <td>{{ record.gender }}</td>
+                    <td>{{ record.guardian_name }}</td>
+                    <td>{{ record.contact_number }}</td>
+                    <td>{{ record.weight }}</td>
+                    <td>{{ record.height }}</td>
+                    <td>{{ record.head_circumference }}</td>
+                    <td>{{ record.mid_upper_arm_circumference }}</td>
+                    <td>{{ record.exclusive_breastfeeding_till_6_months }}</td>
+                    <td>{{ record.complementary_feeding_started }}</td>
+                    <td>{{ record.vitamin_a_supplementation }}</td>
+                    <td>{{ record.immunization_status }}</td>
+                    <td><a href="{% url 'update_child_growth_record' record.id %}">Click</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="14" class="no-records">No records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>
+
+{% endblock %}
