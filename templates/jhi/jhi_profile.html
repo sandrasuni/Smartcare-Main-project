@@ -1,5 +1,4 @@
 {% extends 'jhi/layout_jhi.html' %}
-
 {% load static %}
 
 {% block content %}
@@ -19,8 +18,8 @@
                         <input type="hidden" name="jhi_id" value="{{ jhi.id }}">
 
                         <div class="text-center mb-3">
-                            {% if profile_image and profile_image.profile_image %}
-                                <img src="{{ profile_image.profile_image.url }}" alt="Profile Image" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+                            {% if scan_profile_pic and scan_profile_pic.profile_image %}
+                                <img src="{{ scan_profile_pic.profile_image.url }}" alt="Profile Image" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
                             {% else %}
                                 <img src="{% static 'images/default-profile.png' %}" alt="Default Profile" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
                             {% endif %}
@@ -63,7 +62,7 @@
                                 </button>
                             </div>
                             <div class="col-md-6 position-relative">
-                                <label><strong>Date of Birth:</strong></label>
+                                <label><strong>Date of Birth:{{ jhi.dob }}</strong></label>
                                 <input type="date" class="form-control edit-field" name="dob" value="{{ jhi.dob|date:'Y-m-d' }}" disabled>
                                 <button type="button" class="btn btn-link edit-icon" data-target="dob">
                                     <i class="fas fa-edit"></i>
@@ -105,7 +104,8 @@
                             </div>
                         </div>
 
-                            <div class="col-md-6 position-relative">
+                        <div class="row mb-2">
+                            <div class="col-md-12 position-relative">
                                 <label><strong>Address:</strong></label>
                                 <textarea class="form-control edit-field" name="address" disabled>{{ jhi.address }}</textarea>
                                 <button type="button" class="btn btn-link edit-icon" data-target="address">
@@ -129,7 +129,6 @@
 
 <br><br>
 
-<!-- AJAX Script for Live Editing -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const editBtns = document.querySelectorAll(".edit-icon");
@@ -141,13 +140,13 @@
             btn.addEventListener("click", function () {
                 const targetField = this.getAttribute("data-target");
                 const field = document.querySelector(`[name="${targetField}"]`);
-                field.removeAttribute("disabled");  // Enable the specific field
-                saveBtn.removeAttribute("disabled");  // Enable the save button
+                field.removeAttribute("disabled");
+                saveBtn.removeAttribute("disabled");
             });
         });
 
         // Handle form submission via AJAX
-        document.getElementById("profileForms").addEventListener("submit", function (event) {
+        document.getElementById("profileForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
             let formData = new FormData(this);
@@ -197,6 +196,7 @@
     .position-relative {
         position: relative;
     }
+    
 </style>
 
 {% endblock %}
