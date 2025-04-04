@@ -381,9 +381,29 @@ def register_junior_health_inspector(request):
     return render(request, 'register/register_junior_health_inspector.html',{'approved_healthcare': approved_healthcare}) 
 
 
-def admin_dashboard(requset):
-    user = requset.user
-    return render(requset,'admin/dashboard_admin.html',{'user':user})
+def admin_dashboard(request):
+    user = request.user
+    total_active_user = CustomUser.objects.filter(is_active=True).exclude(role=1).count()
+    total_pharmacist = CustomUser.objects.filter(role = 3).count()
+    total_asha = CustomUser.objects.filter(role = 5).count()
+    total_doctor = CustomUser.objects.filter(role = 2).count()
+    total_healthcentre = CustomUser.objects.filter(role = 8).count()
+    total_jhi = CustomUser.objects.filter(role = 7).count()
+    total_patients = CustomUser.objects.filter(role = 6).count()
+    total_phn = CustomUser.objects.filter(role = 4).count()
+    return render(request, 'admin/dashboard_admin.html', {
+        'user': user,
+        'total_active_user': total_active_user,
+        'total_pharmacist' : total_pharmacist,
+        'total_asha' : total_asha,
+        'total_doctor' : total_doctor,
+        'total_healthcentre' : total_healthcentre,
+        'total_jhi' : total_jhi,
+        'total_patients' : total_patients,
+        'total_phn' : total_phn,
+        })
+
+
 
 def health_dashboard(requset):
     user = requset.user
@@ -427,78 +447,118 @@ from django.shortcuts import render
 from .models import ASHAWorkerProfile, DoctorProfile
 
 def list_healthcare(request):
-    hp = HealthCareProfile.objects.all()
+    hp = HealthCareProfile.objects.all().order_by('-id')  # Newest first
     return render(request, 'admin/list_healthcare.html', {'health': hp})
 
+
 def list_asha(request):
-    asha_workers = ASHAWorkerProfile.objects.all()
+    asha_workers = ASHAWorkerProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_asha.html', {'asha_workers': asha_workers})
 
 def list_doctors(request):
-    doctors = DoctorProfile.objects.all()
+    doctors = DoctorProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_doctors.html', {'doctors': doctors})
 
 
 # View to list Public Health Nurses
 def list_public_health_nurses(request):
-    public_health_nurses = PublicHealthNurseProfile.objects.all()
+    public_health_nurses = PublicHealthNurseProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_phn.html', {'public_health_nurses': public_health_nurses})
 
 # View to list Patients
 def list_patients(request):
-    patients = PatientProfile.objects.all()
+    patients = PatientProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_patient.html', {'patients': patients})
 
 # View to list Pharmacists
 def list_pharmacists(request):
-    pharmacists = PharmacistProfile.objects.all()
+    pharmacists = PharmacistProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_pharmasicst.html', {'pharmacists': pharmacists})
 
 # View to list Junior Health Inspectors
 def list_junior_health_inspectors(request):
-    junior_health_inspectors = JuniorHealthInspectorProfile.objects.all()
+    junior_health_inspectors = JuniorHealthInspectorProfile.objects.all().order_by('-id')
     return render(request, 'admin/list_jhi.html', {'junior_health_inspectors': junior_health_inspectors})
 
 
 
 
 
-from django.shortcuts import render, redirect
-from .models import PatientReport
+# from django.shortcuts import render, redirect
+# from .models import PatientReport
+
+# def patient_report_create(request):
+#     user = request.user
+#     if request.method == 'POST':
+#         title = request.POST.get('title')
+#         description = request.POST.get('description')
+#         file = request.FILES.get('file')  # Handles file uploads
+#         is_continuous_medication = request.POST.get('is_continuous_medication') == 'on'
+        
+#         # Directly fetch the associated PatientProfile
+#         patient_profile = PatientProfile.objects.get(fk_user=user)  # Assuming CustomUser has a related PatientProfile
+
+#         # Create and save the report
+#         report = PatientReport(
+#             fk_patient=patient_profile,  # Correct link to PatientProfile
+#             title=title,
+#             description=description,
+#             file=file,
+#             s_continuous_medication=is_continuous_medication  # Save checkbox value
+#         )
+#         report.save()
+#         return redirect('patient_report_list')
+#     patient_profile = PatientProfile.objects.get(fk_user=user)
+
+    
+#     return render(request, 'patients/patient_report.html',{'patient_profile':patient_profile})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
+from .models import PatientReport, PatientProfile
 
 def patient_report_create(request):
     user = request.user
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
-        file = request.FILES.get('file')  # Handles file uploads
+        file = request.FILES.get('file')  
         is_continuous_medication = request.POST.get('is_continuous_medication') == 'on'
         
-        # Directly fetch the associated PatientProfile
-        patient_profile = PatientProfile.objects.get(fk_user=user)  # Assuming CustomUser has a related PatientProfile
+        # Get the patient profile linked to the user
+        patient_profile = PatientProfile.objects.get(fk_user=user)
 
-        # Create and save the report
+        # Create and save the report with the system's correct time
         report = PatientReport(
-            fk_patient=patient_profile,  # Correct link to PatientProfile
+            fk_patient=patient_profile,
             title=title,
             description=description,
             file=file,
-            s_continuous_medication=is_continuous_medication  # Save checkbox value
+            s_continuous_medication=is_continuous_medication,
+            created_at=now()  # Ensures the correct system time
         )
         report.save()
         return redirect('patient_report_list')
-    patient_profile = PatientProfile.objects.get(fk_user=user)
 
-    
-    return render(request, 'patients/patient_report.html',{'patient_profile':patient_profile})
+    patient_profile = PatientProfile.objects.get(fk_user=user)
+    return render(request, 'patients/patient_report.html', {'patient_profile': patient_profile})
+
 
 
 def patient_report_list(request):
     user = request.user
-    reports = PatientReport.objects.filter(fk_patient__fk_user=user)  # Use .filter() to get a queryset
+    reports = PatientReport.objects.filter(fk_patient__fk_user=user).order_by('-created_at')  # Newest reports first
     patient_profile = PatientProfile.objects.get(fk_user=user)
 
-    return render(request, 'patients/report_list.html', {'reports': reports,'patient_profile':patient_profile})
+    return render(request, 'patients/report_list.html', {'reports': reports, 'patient_profile': patient_profile})
+
+
+# def patient_report_list(request):
+#     user = request.user
+#     reports = PatientReport.objects.filter(fk_patient__fk_user=user)  # Use .filter() to get a queryset
+#     patient_profile = PatientProfile.objects.get(fk_user=user)
+
+#     return render(request, 'patients/report_list.html', {'reports': reports,'patient_profile':patient_profile})
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -1326,9 +1386,14 @@ def user_message_view(request):
 
     return render(request, "dashboard/landing.html")
 
+# def user_message_list(request):
+#     messages = UserMessage.objects.all() 
+#     return render(request,'admin/contact_list.html',{'messages': messages})
+
 def user_message_list(request):
-    messages = UserMessage.objects.all() 
-    return render(request,'admin/contact_list.html',{'messages': messages})
+    messages = UserMessage.objects.all().order_by('-id')  # Newest messages first
+    return render(request, 'admin/contact_list.html', {'messages': messages})
+
 
 
 def user_message_delete(req,id):
@@ -1411,18 +1476,20 @@ def jhi_profile(request):
     user = request.user
     profile_pic = JuniorHealthInspectorProfile.objects.filter(fk_user=user)
     scan_profile_pic = JhiImgProfile.objects.filter(fk_user=user).first()
-    for phn in profile_pic:
-        if phn.dob:
-            phn.dob = DateFormat(phn.dob).format('Y-m-d')
-            print(phn.dob)  # Debugging line to check the value of dob
-    return render(request, 'jhi/jhi_profile.html', {'profile_pic': profile_pic,'scan_profile_pic':scan_profile_pic})
+    for jhi in profile_pic:
+        if jhi.dob:
+            jhi.dob = DateFormat(jhi.dob).format('Y-m-d')  # This converts to string!
+            print(jhi.dob)
+    return render(request, 'jhi/jhi_profile.html', {
+        'profile_pic': profile_pic,
+        'scan_profile_pic': scan_profile_pic
+    })
 
 
 @csrf_exempt
 def update_jhi_profile(request):
     if request.method == "POST":
         user = request.user
-        
         jhi = JuniorHealthInspectorProfile.objects.get(fk_user=user)
 
         if 'profile_image' in request.FILES:
@@ -1430,6 +1497,7 @@ def update_jhi_profile(request):
             jhi_image.profile_image = request.FILES['profile_image']
             jhi_image.save()
 
+        # Retrieve form data
         username = request.POST.get("username")
         email = request.POST.get("email")
         gender = request.POST.get("gender")
@@ -1440,11 +1508,13 @@ def update_jhi_profile(request):
         experience_in_health_inspection = request.POST.get("experience_in_health_inspection")
         address = request.POST.get("address")
 
+        # Update the related user model
         if username:
             user.username = username
         if email:
             user.email = email
 
+        # Update the JHI profile fields
         if gender:
             jhi.gender = gender
         if dob:
@@ -1460,13 +1530,13 @@ def update_jhi_profile(request):
         if address:
             jhi.address = address
 
+        # Save the updated user and profile objects
         user.save()
         jhi.save()
 
         return JsonResponse({"success": True})
 
     return JsonResponse({"success": False})
-
 
 ###########################################################################################
 
@@ -2032,23 +2102,75 @@ def register_vaccination(request):
     route_choices = VaccinationRecord.ROUTE_CHOICES
     return render(request, 'jhi/register_vaccination.html', {'vaccine_choices': vaccine_choices, 'route_choices': route_choices})
 
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
 
 def register_vaccination_list(request):
+    query = request.GET.get('q', '')
+    page_number = request.GET.get('page', 1)
     records = VaccinationRecord.objects.all()
-    return render(request, 'jhi/register_vaccination_list.html', {'records': records})
 
+    if query:
+        records = records.filter(
+            Q(patient_name__icontains=query) |
+            Q(vaccine_name__icontains=query) |
+            Q(contact_number__icontains=query)
+        )
+
+    paginator = Paginator(records, 5)  # 10 records per page
+    page_obj = paginator.get_page(page_number)
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        records_list = [
+            {
+                "patient_name": record.patient_name,
+                "age": record.age,
+                "contact_number": record.contact_number,
+                "vaccine_name": record.vaccine_name,
+                "vaccination_date": record.vaccination_date.strftime('%Y-%m-%d'),
+                "route_of_administration": record.route_of_administration,
+                "location": record.location,
+                "address": record.address,
+            }
+            for record in page_obj
+        ]
+
+        pagination_data = {
+            "has_previous": page_obj.has_previous(),
+            "has_next": page_obj.has_next(),
+            "previous_page": page_obj.previous_page_number() if page_obj.has_previous() else None,
+            "next_page": page_obj.next_page_number() if page_obj.has_next() else None,
+            "current_page": page_obj.number,
+            "total_pages": paginator.num_pages,
+        }
+
+        return JsonResponse({"records": records_list, "pagination": pagination_data})
+
+    return render(request, 'jhi/register_vaccination_list.html', {'page_obj': page_obj, 'query': query})
 
 ##########################################################################################################
 
 
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import VaccinationSchedule
+
 def vaccination_list(request):
-    schedules = VaccinationSchedule.objects.all()
-    return render(request, 'phn/vaccination_list.html', {'schedules': schedules})
+    schedules = VaccinationSchedule.objects.all().order_by('-vaccination_date')  # Order by date (latest first)
+    
+    paginator = Paginator(schedules, 5)  # Show 5 records per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'phn/vaccination_list.html', {'page_obj': page_obj})
 
 # Create view
 def vaccination_create(request):  
     if request.method == 'POST':
-        full_name = request.POST.get('full_name')
+        patient_id = request.POST.get('patient_id')  # Get selected patient ID
+        vaccination_record = get_object_or_404(VaccinationRecord, id=patient_id)
+
         date_of_birth = request.POST.get('date_of_birth')
         gender = request.POST.get('gender')
         age_group = request.POST.get('age_group')
@@ -2057,7 +2179,8 @@ def vaccination_create(request):
 
         VaccinationSchedule.objects.create(
             vaccinator_name=request.user,
-            full_name=full_name,
+            vaccination_record=vaccination_record,
+            full_name=vaccination_record.patient_name,
             date_of_birth=date_of_birth,
             gender=gender,
             age_group=age_group,
@@ -2067,7 +2190,11 @@ def vaccination_create(request):
         return redirect('vaccination_list')
     age_choices = VaccinationSchedule.AGE_CHOICES
     GENDER_CHOICES = VaccinationSchedule.gender_choices
-    return render(request, 'phn/vaccination_form.html', {'age_choices': age_choices, 'gender_choices': GENDER_CHOICES,})
+    patients = VaccinationRecord.objects.all() 
+    return render(request, 'phn/vaccination_form.html', 
+    {'age_choices': age_choices,
+     'gender_choices': GENDER_CHOICES,
+     'patients': patients})
 
 
 def vaccination_delete(request,id):
@@ -2264,37 +2391,6 @@ from django.shortcuts import render
 from collections import defaultdict
 from .models import Prescription
 
-def prescription_list(request):
-    prescriptions = Prescription.objects.select_related("fk_doctor", "fk_patient", "fk_medicine")
-
-    # Filter by patient ID and date if provided
-    patient_id = request.GET.get("patient_id", "").strip()
-    created_date = request.GET.get("created_date", "").strip()
-
-    if patient_id:
-        prescriptions = prescriptions.filter(fk_patient__patient_id__icontains=patient_id)
-
-    if created_date:
-        prescriptions = prescriptions.filter(created_date__date=created_date)
-
-    # Grouping prescriptions by Date and Time
-    grouped_prescriptions = defaultdict(lambda: defaultdict(list))
-    for pres in prescriptions:
-        date_key = pres.created_date.strftime("%Y-%m-%d")  # Group by Date
-        time_key = pres.created_date.strftime("%H:%M")  # Group by Time
-        grouped_prescriptions[date_key][time_key].append(pres)
-
-    # Convert to list for pagination
-    grouped_items = [(date, dict(time_data)) for date, time_data in grouped_prescriptions.items()]
-    paginator = Paginator(grouped_items, 5)  # 5 date groups per page
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "doctor/prescription_list.html", {
-        "page_obj": page_obj,
-        "patient_id": patient_id,
-        "created_date": created_date
-    })
 
 
 from django.http import JsonResponse
@@ -2306,70 +2402,7 @@ def search_patients(request):
     data = [{"id": patient.id, "patient_id": patient.patient_id} for patient in patients]
     return JsonResponse(data, safe=False)
 
-def create_pres(request):
-    days_choices = Prescription.DAYS_CHOICES  # Get choices
-    doctor = DoctorProfile.objects.get(fk_user=request.user)  # Get logged-in doctor
 
-    if request.method == "POST":
-        patient_id = request.POST.get("patient")  # Get patient ID  
-        disease_name = request.POST.get("disease_name")
-        medicine_names = request.POST.getlist("medicine[]")  # Get all selected medicines
-        days_to_take_list = request.POST.getlist("days_to_take[]")  # Get duration list
-        
-        # Debugging prints
-        print(f"Received Patient ID: {patient_id}")
-        print(f"Received Medicines: {medicine_names}")
-        print(f"Received Days to Take: {days_to_take_list}")
-
-        # Check if patient exists
-        try:
-            patient = PatientProfile.objects.get(patient_id=patient_id)
-        except PatientProfile.DoesNotExist:
-            print("Patient not found")
-            return redirect("prescription_list")  # Redirect to prescription list instead of error
-
-        # Loop through medicines and create prescriptions
-        for idx, medicine_name in enumerate(medicine_names):
-            medicine_name = medicine_name.strip()  # Trim spaces
-            days_to_take = days_to_take_list[idx] if idx < len(days_to_take_list) else None
-
-            medicine = Medicine.objects.filter(medicine_name__iexact=medicine_name).first()
-            if not medicine:
-                print(f"Medicine '{medicine_name}' not found (after trimming)")
-                continue  # Skip missing medicines instead of returning an error
-
-            # Create Prescription
-            Prescription.objects.create(
-                fk_doctor=doctor,
-                fk_patient=patient,
-                fk_medicine=medicine,
-                disease_name=disease_name,
-                days_to_take=days_to_take
-            )
-
-        print("✅ Prescription created successfully!")
-
-        # Print all prescription data
-        all_prescriptions = Prescription.objects.all()
-        print("\n==== ALL PRESCRIPTIONS ====")
-        for pres in all_prescriptions:
-            print(f"Doctor: {pres.fk_doctor.fk_user.username}, "
-                  f"Patient: {pres.fk_patient.patient_id}, "
-                  f"Medicine: {pres.fk_medicine.medicine_name}, "
-                  f"Days to Take: {pres.days_to_take}")
-        print("===========================\n")
-
-        return redirect("prescription_list")  # Redirect to the list page after success
-
-    # Fetching data for dropdowns
-    patients = PatientProfile.objects.all()
-    medicines = Medicine.objects.all()
-
-    return render(request, "doctor/create_pres.html", {
-        "patients": patients,
-        "medicines": medicines,
-        "days_choices": days_choices
-    })
 
 
 
@@ -2510,3 +2543,628 @@ def doctor_token_list(request):
         tokens = []  # If the logged-in user doesn't have a DoctorProfile, show an empty list
 
     return render(request, 'doctor/token.html', {'tokens': tokens})
+
+
+
+
+#################################################################################3
+
+#complaint
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Complaint, CustomUser
+
+@login_required
+def user_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('user_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "common/user_complaint.html", {"complaints": complaints})
+
+
+
+@login_required
+def admin_complaints(request):
+    if request.user.role != 1:  # Check if the user is an admin (role=1)
+        return redirect('home')  # Adjust this based on your project's home URL
+
+    all_complaints = Complaint.objects.all().order_by('-created_at')  # Newest first
+
+    if request.method == "POST":
+        complaint_id = request.POST.get("complaint_id")
+        reply = request.POST.get("reply")
+        if complaint_id and reply:
+            complaint = Complaint.objects.get(id=complaint_id)
+            complaint.reply = reply
+            complaint.save()
+            return redirect('admin_dashboard')
+
+    return render(request, "admin/complaints.html", {"complaints": all_complaints})
+
+
+# @login_required
+# def admin_complaints(request):
+#     if request.user.role != 1:  # Check if the user is an admin (role=1)
+#         return redirect('home')  # Adjust this based on your project's home URL
+
+#     all_complaints = Complaint.objects.all()
+
+#     if request.method == "POST":
+#         complaint_id = request.POST.get("complaint_id")
+#         reply = request.POST.get("reply")
+#         if complaint_id and reply:
+#             complaint = Complaint.objects.get(id=complaint_id)
+#             complaint.reply = reply
+#             complaint.save()
+#             return redirect('admin_dashboard')
+
+#     return render(request, "admin/complaints.html", {"complaints": all_complaints})
+
+
+
+
+    #########################################################################################################
+
+from django.shortcuts import render
+from health_app.models import BedriddenVisit, ASHAWorkerProfile
+
+def view_bedridden(request):
+    user = request.user
+
+    try:
+        asha_worker = ASHAWorkerProfile.objects.get(fk_user=user)  # Get ASHA worker profile
+        visits = BedriddenVisit.objects.filter(assigned_asha_worker=asha_worker)
+    except ASHAWorkerProfile.DoesNotExist:
+        visits = BedriddenVisit.objects.none()  # No data if ASHA profile not found
+
+    return render(request, 'asha/view_bedridden.html', {'data': visits})
+
+
+######################################################################################################
+
+def report_form(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        report_date = request.POST.get('report_date')
+        reporter_name = request.POST.get('reporter_name')
+        phone = request.POST.get('phone')
+        institute_type = request.POST.get('institute_type')
+
+        health_center = None
+        designation = ''
+        institute_name = ''
+        position = ''
+
+        if institute_type == 'government':
+            health_center_id = request.POST.get('health_center')
+            health_center = HealthCareProfile.objects.get(id=health_center_id)
+            designation = ','.join(request.POST.getlist('designation'))
+        elif institute_type == 'private':
+            institute_name = request.POST.get('institute_name')
+            position = request.POST.get('position')
+
+        patient_name = request.POST.get('patient_name')
+        disease_name = request.POST.get('disease_name')
+        symptoms = request.POST.get('symptoms')
+        transmission_mode = request.POST.get('transmission_mode')
+        isolation = request.POST.get('isolation')
+        patient_age = request.POST.get('patient_age')
+        patient_gender = request.POST.get('patient_gender')
+        address = request.POST.get('address')
+
+        # Create the report instance
+        G_Report.objects.create(
+            fk_user=request.user,
+            email=email,
+            report_date=report_date,
+            reporter_name=reporter_name,
+            phone=phone,
+            institute_type=institute_type,
+            health_center=health_center,
+            designation=designation,
+            institute_name=institute_name,
+            position=position,
+            patient_name=patient_name,
+            disease_name=disease_name,
+            symptoms=symptoms,
+            transmission_mode=transmission_mode,
+            isolation=isolation,
+            patient_age=patient_age,
+            patient_gender=patient_gender,
+            address=address
+        )
+        messages.success(request, "Report submitted successfully!")
+        return redirect('report_list')
+
+    institute_types = G_Report.INSTITUTE_TYPE_CHOICES
+    transmission_modes = G_Report.TRANSMISSION_MODE_CHOICES
+    isolation_choices = G_Report.ISOLATION_CHOICES
+    gender_choices = G_Report.GENDER_CHOICES
+    health_centers = HealthCareProfile.objects.all()
+
+    return render(request, 'jhi/report_form.html', {
+        'institute_types': institute_types,
+        'transmission_modes': transmission_modes,
+        'isolation_choices': isolation_choices,
+        'gender_choices': gender_choices,
+        'health_centers': health_centers
+    })
+
+
+def report_list(request):
+    reports = G_Report.objects.all().order_by('-report_date')  # Latest reports first
+    return render(request, 'jhi/list.html', {'reports': reports})
+
+
+# def report_list(request):
+#     reports = G_Report.objects.all()
+#     return render(request, 'jhi/list.html', {'reports': reports})
+
+
+#############################################################################################################
+
+from django.shortcuts import render
+from .models import HealthSurvey
+
+def survey_details(request):
+    # Fetch all unique locations from the HealthSurvey model
+    locations = HealthSurvey.objects.values_list('location', flat=True).distinct()
+
+    # Get the selected location from the request
+    selected_location = request.GET.get('location', None)
+
+    # Filter surveys by location if provided
+    if selected_location:
+        surveys = HealthSurvey.objects.filter(location=selected_location)
+    else:
+        surveys = HealthSurvey.objects.all()
+
+    # Fever Cases
+    fever_cases = {
+        "7 days or more (<=5, Male)": sum([s.fever_7_days_or_more_male_5_or_less for s in surveys]),
+        "7 days or more (>5, Male)": sum([s.fever_7_days_or_more_male_above_5 for s in surveys]),
+        "7 days or more (<=5, Female)": sum([s.fever_7_days_or_more_female_5_or_less for s in surveys]),
+        "7 days or more (>5, Female)": sum([s.fever_7_days_or_more_female_above_5 for s in surveys]),
+        "Less than 7 days (<=5, Male)": sum([s.fever_less_than_7_days_male_5_or_less for s in surveys]),
+        "Less than 7 days (>5, Male)": sum([s.fever_less_than_7_days_male_above_5 for s in surveys]),
+        "Less than 7 days (<=5, Female)": sum([s.fever_less_than_7_days_female_5_or_less for s in surveys]),
+        "Less than 7 days (>5, Female)": sum([s.fever_less_than_7_days_female_above_5 for s in surveys]),
+    }
+
+    # Cough Cases
+    cough_cases = {
+        "2 weeks or less (with fever)": sum([s.cough_2_weeks_or_less_with_fever for s in surveys]),
+        "2 weeks or less (without fever)": sum([s.cough_2_weeks_or_less_without_fever for s in surveys]),
+        "More than 2 weeks (with fever)": sum([s.cough_more_than_2_weeks_with_fever for s in surveys]),
+        "More than 2 weeks (without fever)": sum([s.cough_more_than_2_weeks_without_fever for s in surveys]),
+    }
+
+    # Diarrhea Cases
+    diarrhea_cases = {
+        "With blood (less than 2 weeks)": sum([s.loose_watery_stools_with_blood_less_than_2_weeks for s in surveys]),
+        "Without blood (less than 2 weeks)": sum([s.loose_watery_stools_without_blood_less_than_2_weeks for s in surveys]),
+    }
+
+    # Malaria Cases
+    malaria_cases = {
+        "Vivax": sum([s.malaria_vivax_rdt for s in surveys]),
+        "Falciparum": sum([s.malaria_falciparum_rdt for s in surveys]),
+        "Mixed": sum([s.malaria_mixed_rdt for s in surveys]),
+    }
+
+    # Animal Bites
+    animal_bite_cases = {
+        "Snake Bite": sum([s.animal_bite_snake for s in surveys]),
+        "Dog Bite": sum([s.animal_bite_dog for s in surveys]),
+        "Other Bites": sum([s.animal_bite_other for s in surveys]),
+    }
+
+    return render(request, 'jhi/survey_details.html', {
+        'fever_cases': fever_cases,
+        'cough_cases': cough_cases,
+        'diarrhea_cases': diarrhea_cases,
+        'malaria_cases': malaria_cases,
+        'animal_bite_cases': animal_bite_cases,
+        'locations': locations,  # Pass all locations to the template
+        'selected_location': selected_location  # Pass the selected location to the template
+    })
+
+
+
+    #################################################################################
+
+def create_pres(request):
+    days_choices = Prescription.DAYS_CHOICES  # Get choices
+    time_choices = Prescription.TIME_CHOICES  # Get time choices
+    doctor = DoctorProfile.objects.get(fk_user=request.user)  # Get logged-in doctor
+
+    if request.method == "POST":
+        patient_id = request.POST.get("patient")  # Get patient ID  
+        disease_name = request.POST.get("disease_name")
+        medicine_names = request.POST.getlist("medicine[]")  # Get all selected medicines
+        days_to_take_list = request.POST.getlist("days_to_take[]")  # Get duration list
+        time_to_take_list = request.POST.getlist("time_to_take[]")  # Get timing list
+        
+        # Debugging prints
+        print(f"Received Patient ID: {patient_id}")
+        print(f"Received Medicines: {medicine_names}")
+        print(f"Received Days to Take: {days_to_take_list}")
+        print(f"Received Time to Take: {time_to_take_list}")
+
+        # Check if patient exists
+        try:
+            patient = PatientProfile.objects.get(patient_id=patient_id)
+        except PatientProfile.DoesNotExist:
+            print("Patient not found")
+            return redirect("prescription_list")  # Redirect to prescription list instead of error
+        
+
+        # Loop through medicines and create prescriptions
+        for idx, medicine_name in enumerate(medicine_names):
+            medicine_name = medicine_name.strip()  # Trim spaces
+            days_to_take = days_to_take_list[idx] if idx < len(days_to_take_list) else None
+            time_to_take = time_to_take_list[idx] if idx < len(time_to_take_list) else None
+
+            medicine = Medicine.objects.filter(medicine_name__iexact=medicine_name).first()
+            if not medicine:
+                print(f"Medicine '{medicine_name}' not found (after trimming)")
+                continue  # Skip missing medicines instead of returning an error
+
+            # Create Prescription
+            Prescription.objects.create(
+                fk_doctor=doctor,
+                fk_patient=patient,
+                fk_medicine=medicine,
+                disease_name=disease_name,
+                days_to_take=days_to_take,
+                time_to_take=time_to_take
+            )
+
+        print("✅ Prescription created successfully!")
+
+        # Print all prescription data
+        all_prescriptions = Prescription.objects.all()
+        print("\n==== ALL PRESCRIPTIONS ====")
+        for pres in all_prescriptions:
+            print(f"Doctor: {pres.fk_doctor.fk_user.username}, "
+                  f"Patient: {pres.fk_patient.patient_id}, "
+                  f"Medicine: {pres.fk_medicine.medicine_name}, "
+                  f"Days to Take: {pres.days_to_take}, "
+                  f"Time to Take: {pres.time_to_take}")
+        print("===========================\n")
+
+        return redirect("prescription_list")  # Redirect to the list page after success
+
+    # Fetching data for dropdowns
+    patients = PatientProfile.objects.all()
+    medicines = Medicine.objects.all()
+
+    return render(request, "doctor/create_pres.html", {
+        "patients": patients,
+        "medicines": medicines,
+        "days_choices": days_choices,
+        "time_choices": time_choices  # Make sure to pass this to template
+    })
+
+
+####################################################################################################
+
+def prescription_list(request):
+    prescriptions = Prescription.objects.select_related("fk_doctor", "fk_patient", "fk_medicine")
+
+    # Filter by patient ID and date if provided
+    patient_id = request.GET.get("patient_id", "").strip()
+    created_date = request.GET.get("created_date", "").strip()
+
+    if patient_id:
+        prescriptions = prescriptions.filter(fk_patient__patient_id__icontains=patient_id)
+
+    if created_date:
+        prescriptions = prescriptions.filter(created_date__date=created_date)
+
+    # Grouping prescriptions by Date and Time
+    grouped_prescriptions = defaultdict(lambda: defaultdict(list))
+    for pres in prescriptions:
+        date_key = pres.created_date.strftime("%Y-%m-%d")  # Group by Date
+        time_key = pres.created_date.strftime("%H:%M")  # Group by Time
+        grouped_prescriptions[date_key][time_key].append(pres)
+
+    # Convert to list for pagination
+    grouped_items = [(date, dict(time_data)) for date, time_data in grouped_prescriptions.items()]
+    paginator = Paginator(grouped_items, 5)  # 5 date groups per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "doctor/prescription_list.html", {
+        "page_obj": page_obj,
+        "patient_id": patient_id,
+        "created_date": created_date
+    })
+
+
+#issue medicine
+
+@login_required
+def issue_medicine(request):
+    prescriptions = Prescription.objects.select_related("fk_doctor", "fk_patient", "fk_medicine").order_by("-created_date")
+    
+    # Filter by patient ID and date if provided
+    patient_id = request.GET.get("patient_id", "").strip()
+    created_date = request.GET.get("created_date", "").strip()
+
+    if patient_id:
+        prescriptions = prescriptions.filter(fk_patient__patient_id__icontains=patient_id)
+
+    if created_date:
+        prescriptions = prescriptions.filter(created_date__date=created_date)
+
+    # Prefetch issued medicines for these prescriptions
+    issued_medicines = SupplyMedicine.objects.filter(
+        prescription__in=prescriptions
+    ).select_related('issued_by')
+    
+    # Create a dictionary for quick lookup of issued medicines by prescription ID
+    issued_medicines_dict = {
+        im.prescription_id: im 
+        for im in issued_medicines
+    }
+
+    # Handle medicine issuance
+    if request.method == 'POST':
+        prescription_id = request.POST.get('prescription_id')
+        quantity = int(request.POST.get('quantity', 0))
+        
+        try:
+            prescription = Prescription.objects.get(pk=prescription_id)
+            medicine = prescription.fk_medicine
+            pharmacist = PharmacistProfile.objects.get(fk_user=request.user)
+            
+            if quantity <= 0:
+                messages.error(request, "Quantity must be positive")
+            elif medicine.stock_quantity < quantity:
+                messages.error(request, f"Not enough stock. Only {medicine.stock_quantity} available.")
+            else:
+                # Create issued medicine record
+                issued_medicine = SupplyMedicine(
+                    prescription=prescription,
+                    quantity_issued=quantity,
+                    status='delivered',
+                    issued_by=pharmacist
+                )
+                issued_medicine.save()
+                
+                # Update the issued_medicines_dict with the newly issued medicine
+                issued_medicines_dict[prescription_id] = issued_medicine
+                
+                messages.success(request, f"Successfully issued {quantity} of {medicine.medicine_name}")
+                return redirect('issue_medicine')
+                
+        except Prescription.DoesNotExist:
+            messages.error(request, "Invalid prescription")
+        except Exception as e:
+            messages.error(request, f"Error issuing medicine: {str(e)}")
+
+    # Grouping prescriptions by Date and Time
+    grouped_prescriptions = defaultdict(lambda: defaultdict(list))
+    for pres in prescriptions:
+        date_key = pres.created_date.strftime("%Y-%m-%d")  # Group by Date
+        time_key = pres.created_date.strftime("%H:%M")  # Group by Time
+        grouped_prescriptions[date_key][time_key].append((pres, issued_medicines_dict.get(pres.id)))
+
+    # Convert to list for pagination
+    grouped_items = [(date, dict(time_data)) for date, time_data in grouped_prescriptions.items()]
+    paginator = Paginator(grouped_items, 5)  # 5 date groups per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "pharmacist/issue_medicine.html", {
+        "page_obj": page_obj,
+        "patient_id": patient_id,
+        "created_date": created_date
+    })
+
+
+
+
+##############################################################################
+
+import json
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from .models import Medicine
+
+def stock_update(request):
+    low_stock_medicines = Medicine.objects.filter(stock_quantity__lt=50)
+    return render(request, "pharmacist/stock_update.html", {"medicines": low_stock_medicines})
+
+@csrf_exempt
+def update_stock(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            medicine_id = data.get("medicine_id")
+            new_stock_quantity = int(data.get("new_stock_quantity", 0))
+
+            medicine = Medicine.objects.get(id=medicine_id)
+            medicine.stock_quantity += new_stock_quantity  # Add new quantity to existing stock
+            medicine.save()
+
+            return JsonResponse({"success": True, "updated_stock": medicine.stock_quantity})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})
+
+
+
+#contact
+
+def d_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "doctor/d_contact.html")  # Initial page load
+
+
+
+def a_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "asha/a_contact.html")  # Initial page load
+
+
+
+def j_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "jhi/j_contact.html")  # Initial page load
+
+
+
+def pat_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "patients/pat_contact.html")  # Initial page load
+
+
+
+def pharm_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "pharmacist/pharm_contact.html")  # Initial page load
+
+
+
+def phn_contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
+        UserMessage.objects.create(name=name, email=email, phone=phone, message=message)
+        messages.success(request, "Your message has been sent successfully!")
+        return JsonResponse({"success": True})  # Send JSON response
+    return render(request, "phn/phn_contact.html")  # Initial page load
+
+
+##########################################################################
+
+
+@login_required
+def asha_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('asha_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "asha/complaints.html", {"complaints": complaints})
+
+
+@login_required
+def pharmacist_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('pharmacist_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "pharmacist/complaints.html", {"complaints": complaints})
+
+
+@login_required
+def doctor_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('doctor_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "doctor/complaints.html", {"complaints": complaints})
+
+
+@login_required
+def jhi_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('jhi_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "jhi/complaints.html", {"complaints": complaints})
+
+
+@login_required
+def phn_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('phn_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "phn/complaints.html", {"complaints": complaints})
+
+
+@login_required
+def patients_complaints(request):
+    # Fetch complaints of the logged-in user
+    complaints = Complaint.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        if message:
+            Complaint.objects.create(user=request.user, message=message)
+            return redirect('patients_complaints')  # Adjust this based on your URL pattern
+
+    return render(request, "patients/complaints.html", {"complaints": complaints})
