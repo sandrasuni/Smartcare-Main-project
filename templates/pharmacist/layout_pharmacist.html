@@ -78,10 +78,10 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Stock Level Management</a>
+                <a class="nav-link" href="{% url 'stock_update' %}">Stock Level Management</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Issue Medicine</a>
+                <a class="nav-link" href="{% url 'issue_medicine' %}">Issue Medicine</a> 
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -100,8 +100,8 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
                   <li><a class="dropdown-item" href="{% url 'pharmacist_profile' %}">My Profile</a></li>
-                  <li><a class="dropdown-item" href="#">Complaint/Feedback</a></li>
-                  <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                  <li><a class="dropdown-item" href="{% url 'pharmacist_complaints' %}">Complaint/Feedback</a></li>
+                  <li><a class="dropdown-item" href="{% url 'pharm_contact' %}">Contact Us</a></li> 
                   <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
@@ -120,14 +120,19 @@
               <div class="row">
                 <div class="col-md-7">
                   <div class="detail-box">
-                    <h1>
-                      We Provide Best Healthcare
-                    </h1>
+                    <h1>We Provide Best <br>Healthcare</h1>
                     <p>
-                      Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
+                      Your health, our priority — seamlessly connecting patients, doctors, and healthcare providers. 
+                      Our system streamlines patient care, doctor consultations, maternal health tracking, 
+                      child growth monitoring, and pharmacist support.
+                      <span id="more-text" style="display: none;">
+                        We are committed to empowering communities by making healthcare more accessible, organized, and effective. 
+                        From scheduling maternal checkups to tracking child development milestones, we ensure every step of your health journey is managed with care.
+                        Together, let’s build a healthier tomorrow.
+                      </span>
                     </p>
                     <div class="btn-box">
-                      <a href="" class="btn1">
+                      <a href="#" class="btn1" onclick="document.getElementById('more-text').style.display='inline'; this.style.display='none'; return false;">
                         Read More
                       </a>
                     </div>
