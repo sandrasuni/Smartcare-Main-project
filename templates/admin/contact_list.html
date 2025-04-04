@@ -4,28 +4,15 @@
 
 {% block content %}
 
-<div class="row my-4">
-    <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+<div class="row my-4 d-flex justify-content-center"> <!-- Center the row -->
+  <div class="col-lg-10 col-md-10"> <!-- Adjust column width -->
       <div class="card">
         <div class="card-header pb-0">
           <div class="row">
             <div class="col-lg-6 col-7" style="margin-left: 300px;">
               <h6>User Enquiry List</h6>
-              {% comment %} <p class="text-sm mb-0">
-                <i class="fa fa-check text-info" aria-hidden="true"></i>
-              </p> {% endcomment %}
             </div>
             <div class="col-lg-6 col-5 my-auto text-end">
-              {% comment %} <div class="dropdown float-lg-end pe-4">
-                <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-ellipsis-v text-secondary"></i>
-                </a>
-                <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                </ul>
-              </div> {% endcomment %}
             </div>
           </div>
         </div>
@@ -34,17 +21,17 @@
             <table class="table align-items-center mb-0"> 
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SL NO</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Name</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mobile</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trash</th>
+                  <th class="text-uppercase  text-xxs font-weight-bolder opacity-7" style="color:black">SL NO</th>
+                  <th class="text-uppercase  text-xxs font-weight-bolder opacity-7 ps-2" style="color:black">Name</th>
+                  <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7" style="color:black">Email</th>
+                  <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7" style="color:black">Mobile</th>
+                  <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7" style="color:black">Message</th>
+                  <th class="text-center text-uppercase text-xxs font-weight-bolder opacity-7" style="color:black">Trash</th>
                 </tr>
               </thead>
               <tbody>
                 {% for msg in messages %}
-                  <tr>
+                  <tr class="text-center">
                     <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
@@ -61,14 +48,14 @@
                     </td>
                     <td>
                       <div class="avatar-group mt-2">
-                        <span class="text-xs font-weight-bold">{{ msg.email }}</span> <!-- Display Email -->
+                        <span class="text-xs font-weight-bold" style="color:black">{{ msg.email }}</span> <!-- Display Email -->
                       </div>
                     </td>   
                     <td class="align-middle text-center text-sm">
-                      <span class="text-xs font-weight-bold">{{ msg.phone }}</span> <!-- Display Phone -->
+                      <span class="text-xs font-weight-bold" style="color:black">{{ msg.phone }}</span> <!-- Display Phone -->
                     </td>
                     <td class="align-middle text-center">
-                      <p class="text-xs font-weight-bold">{{ msg.message }}</p> <!-- Display Message -->
+                      <p class="text-xs font-weight-bold" style="color:black">{{ msg.message }}</p> <!-- Display Message -->
                     </td>
                     <td class="align-middle text-center">
                         <p class="text-xs font-weight-bold">
