@@ -21,14 +21,17 @@
         <h4>Report Of {{ user.username }} <span class="btn btn-success" style="margin-right: 35px;"><a href="{% url 'patient_report' %}"
             style="color: white;">Add Reports</a></span></h4>
         <br>
-        <table class="table table-hover" style="margin-bottom: 35px;">
+        <table class="table table-hover" style="margin-bottom: 35px; width: 100%; border-spacing: 10px;">
+
           <thead>
             <tr>
+              <th>Sl No</th>
               <th>Title</th>
               <th>Description</th>
               <th>Is Continuous</th>
               <th>File</th>
-              <th>Created At</th>
+              <th style="padding: 15px 20px;">Created At</th>
+              <th style="padding: 15px 20px;" >Updated At</th>
               <th>Update</th>
               <th>Remove</th>
             </tr>
@@ -36,6 +39,7 @@
           <tbody>
             {% for report in reports %}
               <tr>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ report.title }}</td>
                 <td>{{ report.description }}</td>
                 <td>
@@ -75,7 +79,15 @@
                     No file uploaded
                   {% endif %}
                 </td>
-                <td>{{ report.created_at }}</td>
+                <td>
+                  {{ report.created_at|date:"d-m-Y" }} <br>
+                  {{ report.created_at|date:"h:i A" }}
+                </td>
+                <td>
+                  {{ report.updated_at|date:"d-m-Y" }} <br>
+                  {{ report.updated_at|date:"h:i A" }}
+                </td>                
+                
                 <td>
                   <a href="{% url 'report_update' report.id %}">
                     <i class="fas fa-edit" style="color: rgb(49, 144, 4); font-size: 13px;margin-left: 24px;"></i> <!-- Trash icon -->
