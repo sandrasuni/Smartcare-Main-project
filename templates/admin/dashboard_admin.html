@@ -4,8 +4,10 @@
 
 {% block content %}
 
+
 <div class="container-fluid py-4">
-  <div class="row">
+  <div class="row mb-4"> <!-- Added margin-bottom to this row -->
+    <!-- Total Active Users -->
     <div class="col-lg-3 col-md-6 col-12">
       <div class="card">
         <span class="mask bg-primary opacity-10 border-radius-lg"></span>
@@ -13,31 +15,35 @@
           <div class="row">
             <div class="col-8 text-start">
               <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
-                <i class="ni ni-circle-08 text-dark text-gradient text-lg opacity-10" aria-hidden="true"></i>
+                <i class="ni ni-circle-08 text-dark text-lg opacity-10"></i>
               </div>
-              <h5 class="text-white font-weight-bolder mb-0 mt-3">
-                1600
-              </h5>
-              <span class="text-white text-sm">Users Active</span>
-            </div>
-            <div class="col-4">
-              <div class="dropdown text-end mb-6">
-                <a href="javascript:;" class="cursor-pointer" id="dropdownUsers1" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-ellipsis-h text-white"></i>
-                </a>
-                <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownUsers1">
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                </ul>
-              </div>
-              <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">+55%</p>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_active_user }}</h5>
+              <span class="text-white text-sm">Total Active Users</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Total Pharmacists -->
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card">
+        <span class="mask bg-info opacity-10 border-radius-lg"></span>
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-8 text-start">
+              <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                <i class="ni ni-caps-small text-dark text-lg opacity-10"></i>
+              </div>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_pharmacist }}</h5>
+              <span class="text-white text-sm">Total Pharmacists</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total ASHA Workers -->
     <div class="col-lg-3 col-md-6 col-12">
       <div class="card">
         <span class="mask bg-dark opacity-10 border-radius-lg"></span>
@@ -45,99 +51,113 @@
           <div class="row">
             <div class="col-8 text-start">
               <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
-                <i class="ni ni-active-40 text-dark text-gradient text-lg opacity-10" aria-hidden="true"></i>
+                <i class="ni ni-user-run text-dark text-lg opacity-10"></i>
               </div>
-              <h5 class="text-white font-weight-bolder mb-0 mt-3">
-                357
-              </h5>
-              <span class="text-white text-sm">Click Events</span>
-            </div>
-            <div class="col-4">
-              <div class="dropstart text-end mb-6">
-                <a href="javascript:;" class="cursor-pointer" id="dropdownUsers2" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-ellipsis-h text-white"></i>
-                </a>
-                <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownUsers2">
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                </ul>
-              </div>
-              <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">+124%</p>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_asha }}</h5>
+              <span class="text-white text-sm">Total ASHA Workers</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Total Doctors -->
     <div class="col-lg-3 col-md-6 col-12">
       <div class="card">
-        <span class="mask bg-dark opacity-10 border-radius-lg"></span>
+        <span class="mask bg-success opacity-10 border-radius-lg"></span>
         <div class="card-body p-3 position-relative">
           <div class="row">
             <div class="col-8 text-start">
               <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
-                <i class="ni ni-cart text-dark text-gradient text-lg opacity-10" aria-hidden="true"></i>
+                <i class="ni ni-hat-3 text-dark text-lg opacity-10"></i>
               </div>
-              <h5 class="text-white font-weight-bolder mb-0 mt-3">
-                2300
-              </h5>
-              <span class="text-white text-sm">Purchases</span>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_doctor }}</h5>
+              <span class="text-white text-sm">Total Doctors</span>
             </div>
-            <div class="col-4">
-              <div class="dropdown text-end mb-6">
-                <a href="javascript:;" class="cursor-pointer" id="dropdownUsers3" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-ellipsis-h text-white"></i>
-                </a>
-                <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownUsers3">
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- End of first row -->
+
+  <div class="row"> <!-- Second row starts here -->
+    <!-- Total JHIs -->
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card">
+        <span class="mask bg-gradient-danger opacity-10 border-radius-lg"></span>
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-8 text-start">
+              <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                <i class="ni ni-ambulance text-dark text-lg opacity-10"></i>
               </div>
-              <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">+15%</p>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_jhi }}</h5>
+              <span class="text-white text-sm">Total JHIs</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Total Patients -->
     <div class="col-lg-3 col-md-6 col-12">
       <div class="card">
-        <span class="mask bg-dark opacity-10 border-radius-lg"></span>
+        <span class="mask bg-warning opacity-10 border-radius-lg"></span>
         <div class="card-body p-3 position-relative">
           <div class="row">
             <div class="col-8 text-start">
               <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
-                <i class="ni ni-like-2 text-dark text-gradient text-lg opacity-10" aria-hidden="true"></i>
+                <i class="ni ni-single-02 text-dark text-lg opacity-10"></i>
               </div>
-              <h5 class="text-white font-weight-bolder mb-0 mt-3">
-                940
-              </h5>
-              <span class="text-white text-sm">Likes</span>
-            </div>
-            <div class="col-4">
-              <div class="dropstart text-end mb-6">
-                <a href="javascript:;" class="cursor-pointer" id="dropdownUsers4" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-ellipsis-h text-white"></i>
-                </a>
-                <ul class="dropdown-menu px-2 py-3" aria-labelledby="dropdownUsers4">
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                  <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                </ul>
-              </div>
-              <p class="text-white text-sm text-end font-weight-bolder mt-auto mb-0">+90%</p>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_patients }}</h5>
+              <span class="text-white text-sm">Total Patients</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Total PHNs -->
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card">
+        <span class="mask bg-danger opacity-10 border-radius-lg"></span>
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-8 text-start">
+              <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                <i class="ni ni-support-16 text-dark text-lg opacity-10"></i>
+              </div>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_phn }}</h5>
+              <span class="text-white text-sm">Total PHNs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Health Centres -->
+    <div class="col-lg-3 col-md-6 col-12">
+      <div class="card">
+        <span class="mask bg-secondary opacity-10 border-radius-lg"></span>
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-8 text-start">
+              <div class="icon icon-shape bg-white shadow text-center border-radius-2xl">
+                <i class="ni ni-building text-dark text-lg opacity-10"></i>
+              </div>
+              <h5 class="text-white font-weight-bolder mb-0 mt-3">{{ total_healthcentre }}</h5>
+              <span class="text-white text-sm">Total Health Centres</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- End of second row -->
 </div>
 
 
-<div class="row my-4">
+
+{% comment %} <div class="row my-4">
   <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
     <div class="card">
       <div class="card-header pb-0">
@@ -481,7 +501,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> {% endcomment %}
 
 
 {% endblock %}
