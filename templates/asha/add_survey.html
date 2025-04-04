@@ -258,3 +258,167 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+{% comment %} <form method="POST">
+    {% csrf_token %}
+    <table border="1">
+        <tr>
+            <th rowspan="2">Illness</th>
+            <th colspan="3">Male</th>
+            <th colspan="3">Female</th>
+            <th rowspan="2">Total Cases</th>
+            <th colspan="3">Deaths</th>
+        </tr>
+        <tr>
+            <th>≤ 5 Yr</th>
+            <th>> 5 Yr</th>
+            <th>Total</th>
+            <th>≤ 5 Yr</th>
+            <th>> 5 Yr</th>
+            <th>Total</th>
+            <th>Male</th>
+            <th>Female</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td>Only Fever ≥ 7 days</td>
+            <td><input type="number" name="fever_7_days_or_more_male_5_or_less" value="0"></td>
+            <td><input type="number" name="fever_7_days_or_more_male_above_5" value="0"></td>
+            <td>-</td>
+            <td><input type="number" name="fever_7_days_or_more_female_5_or_less" value="0"></td>
+            <td><input type="number" name="fever_7_days_or_more_female_above_5" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Only Fever < 7 days</td>
+            <td><input type="number" name="fever_less_than_7_days_male_5_or_less" value="0"></td>
+            <td><input type="number" name="fever_less_than_7_days_male_above_5" value="0"></td>
+            <td>-</td>
+            <td><input type="number" name="fever_less_than_7_days_female_5_or_less" value="0"></td>
+            <td><input type="number" name="fever_less_than_7_days_female_above_5" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Fever with Rash</td>
+            <td colspan="6"><input type="number" name="fever_with_rash" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Fever with Bleeding</td>
+            <td colspan="6"><input type="number" name="fever_with_bleeding" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Fever with Altered Sensorium</td>
+            <td colspan="6"><input type="number" name="fever_with_altered_sensorium" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Cough ≤ 2 weeks with fever</td>
+            <td colspan="6"><input type="number" name="cough_2_weeks_or_less_with_fever" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Cough ≤ 2 weeks without fever</td>
+            <td colspan="6"><input type="number" name="cough_2_weeks_or_less_without_fever" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Cough > 2 weeks with fever</td>
+            <td colspan="6"><input type="number" name="cough_more_than_2_weeks_with_fever" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Cough > 2 weeks without fever</td>
+            <td colspan="6"><input type="number" name="cough_more_than_2_weeks_without_fever" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Loose watery stools with blood < 2 weeks</td>
+            <td colspan="6"><input type="number" name="loose_watery_stools_with_blood_less_than_2_weeks" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Loose watery stools without blood < 2 weeks</td>
+            <td colspan="6"><input type="number" name="loose_watery_stools_without_blood_less_than_2_weeks" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Jaundice < 4 weeks</td>
+            <td colspan="6"><input type="number" name="jaundice_less_than_4_weeks" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Malaria Vivax RDT</td>
+            <td colspan="6"><input type="number" name="malaria_vivax_rdt" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Animal Bite - Dog Bite</td>
+            <td colspan="6"><input type="number" name="animal_bite_dog" value="0"></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td colspan="6"><input type="number" name="total_cases" value="0" readonly></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td><input type="number" name="total_deaths" value="0" readonly></td>
+        </tr>
+    </table>
+    <button type="submit">Submit</button>
+</form> {% endcomment %}
