@@ -113,6 +113,9 @@ urlpatterns = [
 
    path('Jhi/jhi_profile',jhi_profile, name='jhi_profile'),
    path('update_jhi_profile/',update_jhi_profile, name='update_jhi_profile'),
+
+   
+
    path('my_jhi_attendance/', my_jhi_attendance, name='my_jhi_attendance'),
    path('mark_jhi_attendance/',mark_jhi_attendance, name='mark_jhi_attendance'),
 
@@ -179,6 +182,48 @@ urlpatterns = [
 
    path("doctor_token_list/", doctor_token_list, name="doctor_token_list"),
 
+   path('complaints/', user_complaints, name='user_complaints'),
+   path('admin-complaints/', admin_complaints, name='admin_complaints'),
+
+   path('view_bedridden/', view_bedridden, name='view_bedridden'),
+
+   path('admin-report_form/', report_form, name='report_form'),
+   path('admin-report_list/', report_list, name='report_list'),
+
+   path('survey-details/', survey_details, name='survey_details'),
+   path('issue_medicine/', issue_medicine, name='issue_medicine'),
+
+   path("stock_update/", stock_update, name="stock_update"),
+   path("update_stock/", update_stock, name="update_stock"),
+
+
+
+   path('d_contact/', d_contact, name='d_contact'),
+   path('phn_contact/', phn_contact, name='phn_contact'),
+   path('pharm_contact/', pharm_contact, name='pharm_contact'),
+   path('pat_contact/', pat_contact, name='pat_contact'),
+   path('j_contact/', j_contact, name='j_contact'),
+   path('a_contact/', a_contact, name='a_contact'),
+
+
+   #################################################################
+
+   path('asha_complaints/', asha_complaints, name='asha_complaints'),
+
+   path('pharmacist_complaints/', pharmacist_complaints, name='pharmacist_complaints'),
+
+   path('doctor_complaints/', doctor_complaints, name='doctor_complaints'),
+
+   path('jhi_complaints/', jhi_complaints, name='jhi_complaints'),
+
+   path('phn_complaints/', phn_complaints, name='phn_complaints'),
+
+   path('patients_complaints/', patients_complaints, name='patients_complaints'),
+   
+   
 ]
+
+
+
 
 
