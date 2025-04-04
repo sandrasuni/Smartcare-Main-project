@@ -5,10 +5,14 @@
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Vaccination Records</h2>
 
+    <!-- Live Search Input -->
+    <input type="text" id="search-box" class="form-control mb-3" placeholder="Search by patient name, vaccine name, or contact number">
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-success">
                 <tr>
+                    <th>Sl No</th>
                     <th>Patient Name</th>
                     <th>Age</th>
                     <th>Contact Number</th>
@@ -19,9 +23,10 @@
                     <th>Address</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for record in records %}
+            <tbody id="records-table">
+                {% for record in page_obj %}
                 <tr>
+                    <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
                     <td>{{ record.patient_name }}</td>
                     <td>{{ record.age }}</td>
                     <td>{{ record.contact_number }}</td>
@@ -39,5 +44,93 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination Controls -->
+    <nav>
+        <ul class="pagination justify-content-center" id="pagination-controls">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page=1">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
+
+<!-- JavaScript for AJAX Live Search with Pagination -->
+<script>
+    function fetchRecords(query = '', page = 1) {
+        fetch(`?q=${query}&page=${page}`, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById("records-table");
+            tableBody.innerHTML = "";
+
+            if (data.records.length > 0) {
+                data.records.forEach(record => {
+                    let row = `
+                        <tr>
+                            <td>${record.patient_name}</td>
+                            <td>${record.age}</td>
+                            <td>${record.contact_number}</td>
+                            <td>${record.vaccine_name}</td>
+                            <td>${record.vaccination_date}</td>
+                            <td>${record.route_of_administration}</td>
+                            <td>${record.location}</td>
+                            <td>${record.address}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="8" class="text-center">No records found.</td></tr>`;
+            }
+
+            // Update pagination
+            let paginationControls = document.getElementById("pagination-controls");
+            paginationControls.innerHTML = '';
+
+            if (data.pagination.has_previous) {
+                paginationControls.innerHTML += `
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchRecords('${query}', 1)">First</a></li>
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchRecords('${query}', ${data.pagination.previous_page})">Previous</a></li>
+                `;
+            }
+
+            paginationControls.innerHTML += `
+                <li class="page-item disabled"><span class="page-link">Page ${data.pagination.current_page} of ${data.pagination.total_pages}</span></li>
+            `;
+
+            if (data.pagination.has_next) {
+                paginationControls.innerHTML += `
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchRecords('${query}', ${data.pagination.next_page})">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchRecords('${query}', ${data.pagination.total_pages})">Last</a></li>
+                `;
+            }
+        });
+    }
+
+    document.getElementById("search-box").addEventListener("keyup", function() {
+        let query = this.value;
+        fetchRecords(query);
+    });
+
+    fetchRecords();
+</script>
 {% endblock %}
