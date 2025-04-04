@@ -3,14 +3,19 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="mb-4">Register Child for Vaccination</h2>
+  <h2 class="mb-4">Update Vaccination Record</h2>
   <form method="POST">
     {% csrf_token %}
 
     <div class="row mb-3">
-      <label for="full_name" class="col-sm-2 col-form-label">Child's Full Name</label>
+      <label for="patient_id" class="col-sm-2 col-form-label">Select Patient</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name" required>
+        <select class="form-control" id="patient_id" name="patient_id" required>
+          <option value="">-- Select Patient --</option>
+          {% for patient in patients %}
+          <option value="{{ patient.id }}">{{ patient.patient_name }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
 
@@ -64,6 +69,7 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
+<br><br><br><br>
 
 <script>
   const vaccinesByAge = {
