@@ -127,14 +127,14 @@
 </style>
 
 <div class="custom-container">
-  <h2>Asha Worker Enquiry Form</h2>
+  <h2>Add Patient Record</h2>
   <form method="POST" action="{% url 'save_household' %}">
     {% csrf_token %}
     <!-- Household Information -->
     <h3>Household Information</h3>
     <div class="form-group">
-      <small>Enter the House name</small>
-      <input type="text" name="head_of_household" placeholder="House Name">
+      <small>Enter the Household name</small>
+      <input type="text" name="head_of_household" placeholder="Household Name">
     </div>
     <div class="form-group">
       <small>Enter the contact number of the household</small>
