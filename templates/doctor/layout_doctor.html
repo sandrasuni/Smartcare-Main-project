@@ -101,8 +101,8 @@
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
                   <li><a class="dropdown-item" href="doctors.html"></a></li>
                   <li><a class="dropdown-item" href="{% url 'doctors_profile' %}">My Profile</a></li>
-                  <li><a class="dropdown-item" href="#">Complaint/Feedback</a></li>
-                  <li><a class="dropdown-item" href="#">Contact Us</a></li>
+                  <li><a class="dropdown-item" href="{% url 'doctor_complaints' %}">Complaint/Feedback</a></li>
+                  <li><a class="dropdown-item" href="{% url 'd_contact' %}">Contact Us</a></li>
                   <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
