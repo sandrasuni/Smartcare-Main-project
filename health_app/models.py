@@ -258,7 +258,6 @@ class Attendance(models.Model):
 
 
 
-
 class JhiImgProfile(models.Model):
     fk_user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to='profiles/', null=True, blank=True)
@@ -273,16 +272,6 @@ class JhiImgProfile(models.Model):
             if encoding is not None:
                 self.face_encoding = np.array(encoding).tobytes()
                 super().save(update_fields=["face_encoding"])
-
-
-
-
-
-
-
-
-
-
 
 
 # Patient Profile
@@ -393,6 +382,7 @@ class HealthEducation(models.Model):
 class HealthSurvey(models.Model):
     fk_user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     household = models.ForeignKey(Household, on_delete=models.CASCADE, related_name='health_surveys')
+    location = models.CharField(max_length=255, default="Unknown")
 
     # Fever Cases
     fever_7_days_or_more_male_5_or_less = models.IntegerField(default=0)
@@ -598,6 +588,33 @@ class VaccinationRecord(models.Model):
         ('DTP', 'DTP'),
         ('Measles', 'Measles'),
         ('COVID-19', 'COVID-19'),
+        ('OPV-0', 'OPV-0'),
+        ('Hep-b', 'Hep-b'),
+        ('OPV-1', 'OPV-1'),
+        ('Penta-1', 'Penta-1'),
+        ('IPV-1', 'IPV-1'),
+        ('Rota-1', 'Rota-1'),
+        ('PCV-1', 'PCV-1'),
+        ('OPV-2', 'OPV-2'),
+        ('Penta-2', 'Penta-2'),
+        ('Rota-2', 'Rota-2'),
+        ('OPV-3', 'OPV-3'),
+        ('Penta-3', 'Penta-3'),
+        ('IPV-2', 'IPV-2'),
+        ('Rota-3', 'Rota-3'),
+        ('PCV-2', 'PCV-2'),
+        ('MR-1', 'MR-1'),
+        ('IPV-3', 'IPV-3'),
+        ('PCV-booster', 'PCV-booster'),
+        ('Vita-a1', 'Vita-a1'),
+        ('JE-1', 'JE-1'),
+        ('DPT-booster-1', 'DPT-booster-1'),
+        ('Vita-a2', 'Vita-a2'),
+        ('MR-2', 'MR-2'),
+        ('JE-2', 'JE-2'),
+        ('OPV-booster', 'OPV-booster'),
+        ('DPT-booster-2', 'DPT-booster-2'),
+        ('TD', 'TD'),
     ]
 
     ROUTE_CHOICES = [
@@ -638,6 +655,7 @@ class VaccinationSchedule(models.Model):
     gender_choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')]
 
     vaccinator_name = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    vaccination_record = models.ForeignKey(VaccinationRecord, on_delete=models.CASCADE, null=True, blank=True)
     full_name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10,choices=gender_choices)
@@ -688,7 +706,7 @@ class Bedridden(models.Model):
         return self.full_name
 
 
-########################################################
+###########################################################################################
 
 class BedriddenVisit(models.Model):
     HEALTH_WORKER_CHOICES = [
@@ -758,11 +776,20 @@ class Prescription(models.Model):
         (6, "6 Days"),
         (7, "1 Week"),
     ]
+    TIME_CHOICES = [
+        ("3_bf", "3 times before food"),
+        ("3_af", "3 times after food"),
+        ("2_bf", "2 times before food"),
+        ("2_af", "2 times after food"),
+        ("1_bf", "1 time before food"),
+        ("1_af", "1 time after food"),
+    ]
 
     fk_doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="prescriptions_given")
     fk_patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name="prescriptions_received")
     fk_medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     disease_name = models.CharField(max_length=100,null=True,blank=True)
+    time_to_take = models.CharField(max_length=10,choices=TIME_CHOICES,default="2_af")
     days_to_take = models.IntegerField(choices=DAYS_CHOICES)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -772,3 +799,111 @@ class Token_No(models.Model):
     fk_doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE, related_name="token_doct")
     fk_patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name="token_pat")
     created_date = models.DateTimeField(auto_now_add=True)
+
+
+
+class Complaint(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    reply = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def _str_(self):
+        return f"Complaint by {self.user.username}"
+
+
+
+
+##########################################################################################################
+
+class G_Report(models.Model):
+    fk_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    email = models.EmailField()
+    report_date = models.DateField()
+    reporter_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    INSTITUTE_TYPE_CHOICES = (
+        ('government', 'Government'),
+        ('private', 'Private'),
+    )
+    institute_type = models.CharField(max_length=20, choices=INSTITUTE_TYPE_CHOICES)
+    health_center = models.ForeignKey(HealthCareProfile, on_delete=models.CASCADE, null=True, blank=True)
+    designation = models.CharField(max_length=100, blank=True)
+    institute_name = models.CharField(max_length=255, blank=True)
+    position = models.CharField(max_length=100, blank=True)
+    patient_name = models.CharField(max_length=100)
+    disease_name = models.CharField(max_length=100)
+    symptoms = models.TextField()
+    TRANSMISSION_MODE_CHOICES = (
+        ('air', 'Air'),
+        ('water', 'Water'),
+        ('other', 'Other'),
+    )
+    transmission_mode = models.CharField(max_length=20, choices=TRANSMISSION_MODE_CHOICES)
+    ISOLATION_CHOICES = (
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    )
+    isolation = models.CharField(max_length=10, choices=ISOLATION_CHOICES)
+    patient_age = models.PositiveIntegerField()
+    GENDER_CHOICES = (
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    )
+    patient_gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    address = models.TextField()
+
+    def __str__(self):
+        return f'Report by {self.reporter_name} - {self.patient_name}'
+
+
+
+# models.py
+from django.db import models
+from django.core.mail import send_mail
+from django.conf import settings
+
+class SupplyMedicine(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE)
+    quantity_issued = models.PositiveIntegerField()
+    issued_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    issued_by = models.ForeignKey(PharmacistProfile, on_delete=models.CASCADE)
+    
+    def save(self, *args, **kwargs):
+        # Check if this is a new issuance (not an update)
+        is_new = self.pk is None
+        
+        super().save(*args, **kwargs)
+        
+        if is_new and self.status == 'delivered':
+            # Decrease stock quantity
+            medicine = self.prescription.fk_medicine
+            medicine.stock_quantity -= self.quantity_issued
+            medicine.save()
+            
+            # Check stock level and send email if low
+            if medicine.stock_quantity < 30:
+                subject = f'Low Stock Alert: {medicine.medicine_name}'
+                message = (
+                    f'The stock quantity for {medicine.medicine_name} ({medicine.brand_name}) '
+                    f'is now {medicine.stock_quantity}, which is below the threshold of 30. '
+                    f'Please restock soon.'
+                )
+                recipient_list = [pharmacist.fk_user.email for pharmacist in PharmacistProfile.objects.all()]
+                
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    recipient_list,
+                    fail_silently=False,
+                )
