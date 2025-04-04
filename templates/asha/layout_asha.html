@@ -83,7 +83,7 @@
                   <li><a class="dropdown-item" href="{% url 'asha_worker_list' %}">View Patient Record</a></li>
                   <li><a class="dropdown-item" href="{% url 'add_survey' %}">Communicable Disease</a></li>
                   <li><a class="dropdown-item" href="{% url 'survey_list' %}">Communicable Record</a></li>
-                  <li><a class="dropdown-item" href="#">Bedridden Patients</a></li>
+                  <li><a class="dropdown-item" href="{% url 'view_bedridden' %}">Bedridden Patients</a></li>  
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -104,14 +104,13 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #57b4a8;">
                   <li><a class="dropdown-item" href="{% url 'asha_profile' %}">My Profile</a></li>
-                  <li><a class="dropdown-item" href="#">Contact Us</a></li>
-                  <li><a class="dropdown-item" href="#">Complaint/Feedback</a></li>
+                  <li><a class="dropdown-item" href="{% url 'a_contact' %}">Contact Us</a></li> 
+                  <li><a class="dropdown-item" href="{% url 'asha_complaints' %}">Complaint/Feedback</a></li>
                   <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
               </li>
               
               
-                
           </div>
         </nav>
       </div>
@@ -215,7 +214,7 @@
 
   <!-- footer section -->
 
-  <footer class="footer_section">
+  {% comment %} <footer class="footer_section">
     <div class="container">
       <div class="row">
         <div class="col-md-6 col-lg-3 footer_col">
@@ -245,7 +244,7 @@
             </p>
           </div>
         </div>
-        {% comment %} <div class="col-md-6 col-lg-2 mx-auto footer_col">
+        <div class="col-md-6 col-lg-2 mx-auto footer_col">
           <div class="footer_link_box">
             <h4>Links</h4>
             <div class="footer_links">
@@ -256,12 +255,12 @@
               <div>Contact Us</div>
             </div>
           </div>
-        </div> {% endcomment %}
+        </div>
       </div>
     </div>
-  </footer>
+  </footer> {% endcomment %}
   
-  {% comment %} <footer class="footer_section">
+  <footer class="footer_section">
     <div class="container">
       <div class="row">
         <div class="col-md-6 col-lg-3 footer_col">
@@ -357,7 +356,7 @@ Our Healthcare Management System helps streamline patient care, doctor consultat
         </p>
       </div>
     </div>
-  </footer> {% endcomment %}
+  </footer>
   <!-- footer section -->
 
   <!-- popper js -->
