@@ -33,14 +33,19 @@
             <textarea id="address" name="address" class="form-control" rows="2" required></textarea>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-3 position-relative">
             <label for="vaccine_name" class="form-label">Vaccine Name</label>
-            <select id="vaccine_name" name="vaccine_name" class="form-select" required>
-                {% for value, label in vaccine_choices %}
-                    <option value="{{ value }}">{{ label }}</option>
-                {% endfor %}
-            </select>
+            <div class="dropdown w-100">
+                <input type="text" id="vaccine_input" class="form-control dropdown-toggle" data-bs-toggle="dropdown" placeholder="Select a vaccine" readonly>
+                <ul class="dropdown-menu w-100" id="vaccine_dropdown" style="max-height: 200px; overflow-y: auto;">
+                    {% for value, label in vaccine_choices %}
+                        <li><a class="dropdown-item" href="#" data-value="{{ value }}">{{ label }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <input type="hidden" id="vaccine_name" name="vaccine_name">
         </div>
+        
 
         <div class="row mb-3">
             <label for="vaccination_date" class="form-label">Vaccination Date</label>
@@ -61,4 +66,23 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const vaccineInput = document.getElementById("vaccine_input");
+        const hiddenVaccineInput = document.getElementById("vaccine_name");
+        const dropdownItems = document.querySelectorAll("#vaccine_dropdown .dropdown-item");
+    
+        // Handle item selection
+        dropdownItems.forEach(item => {
+            item.addEventListener("click", function (event) {
+                event.preventDefault();
+                vaccineInput.value = this.textContent;
+                hiddenVaccineInput.value = this.getAttribute("data-value");
+            });
+        });
+    });
+    </script>
+    
+
 {% endblock %}
