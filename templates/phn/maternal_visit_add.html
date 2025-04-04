@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container">
   <h2>Add Maternal Visit Schedule</h2>
+  <br>
 
   <form method="POST" action="">
     {% csrf_token %}
@@ -46,7 +47,7 @@
       </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add Visit</button>
+    <button type="submit" class="btn btn-primary">Add Visit</button><br><br><br>
   </form>
 </div>
 {% endblock %}
